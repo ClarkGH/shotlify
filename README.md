@@ -7,7 +7,7 @@
 ## To Run
 
 - Clone the repository.
-- Run `$ yarn && yarn build && yarn start`
+- Run `$ yarn && yarn dev`
 - Visit http://localhost:3000
 - Have fun
 
