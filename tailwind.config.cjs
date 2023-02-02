@@ -2,7 +2,12 @@
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['-apple-system', 'sans-serif'],
+        serif: ['ui-serif', 'serif'],
+      }
+    },
   },
   plugins: [],
 };
