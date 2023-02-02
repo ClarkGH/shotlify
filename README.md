@@ -8,8 +8,8 @@
 
 - Clone the repository.
 - Run `$ yarn && yarn build && yarn start`
-- ???
-- Profit
+- Visit http://localhost:3000
+- Have fun
 
 ## Stack
 
