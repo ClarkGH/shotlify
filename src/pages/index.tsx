@@ -13,8 +13,8 @@ const ACCEPTED_FILE_TYPES = "image/png, image/gif, image/jpeg, video/*";
 
 const Home: NextPage = () => {
   const [images, setImages] = useState<File[]>([]);
-  const [videos, setVideos] = useState<File[]>([]);
   const [imageSources, setImageSources] = useState<(string)[]>([]);
+  const [videoSources, setVideoSources] = useState<(string)[]>([]);
 
   const handleFileChange = (selectedFiles: FileList) => {
     if (selectedFiles.length) {
@@ -22,17 +22,19 @@ const Home: NextPage = () => {
     }
     if (selectedFiles) {
       Array.from(selectedFiles).forEach((file: File) => {
+        const reader = new FileReader();
+  
+        reader.readAsDataURL(file);
+
         if (file.type.startsWith('image/')) {
-          
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
           reader.onload = () => {
             setImages((prevImages) => [file, ...prevImages]);
             setImageSources((prevImageSources) => [reader.result as string, ...prevImageSources]);
           };
-          
         } else {
-          console.log('Video embedding stuff here.');
+          reader.onload = () => {
+            setVideoSources((prevVideoSources) => [reader.result as string, ...prevVideoSources]);
+          };
         }
       });
     }
@@ -50,6 +52,10 @@ const Home: NextPage = () => {
           <h1 className="text-black text-6xl mt-12">Shotlify</h1>
         </header>
         <main className="flex flex-col items-center">
+          {videoSources ? videoSources.map((video, index) => {
+            return <video src={video} key={`video-no-${index}`} width={480} height={480} ></video>
+          }) : ''}
+
           <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} hideFileChosen={true} />
 
           {imageSources ? imageSources.map((image, index) => {
