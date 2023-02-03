@@ -6,12 +6,11 @@ interface FileProps {
 
 interface FileInputProps {
     onFilesChange: (selectedFiles: FileProps[]) => void;
+    hideFileChosen?: boolean;
     accept?: string;
 }
 
-const FileInput: React.FC<FileInputProps> = ({ onFilesChange, accept }) => {
-    const [files] = useState<FileProps[]>([]);
-
+const FileInput: React.FC<FileInputProps> = ({ onFilesChange, accept, hideFileChosen }) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = Array.from(event.target.files || []).map((file) => ({
             name: file.name,
@@ -21,16 +20,7 @@ const FileInput: React.FC<FileInputProps> = ({ onFilesChange, accept }) => {
     };
 
     return (
-        <div>
-            <input type="file" accept={accept} multiple onChange={handleChange} />
-            {files.length > 0 && (
-                <ul>
-                    {files.map((file) => (
-                        <li key={file.name}>{file.name}</li>
-                    ))}
-                </ul>
-            )}
-        </div>
+        <input className={hideFileChosen ? 'text-transparent' : ''} type="file" accept={accept} multiple onChange={handleChange} />
     );
 };
 

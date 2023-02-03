@@ -31,11 +31,11 @@ const Home: NextPage = () => {
           <h1 className="text-black text-6xl mt-12">Shotlify</h1>
         </header>
         <main className="flex flex-col items-center">
-          <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFiles}/>
+          <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFiles} hideFileChosen={true} />
           {files.length > 0 && (
             <ul>
               {files.map((file) => (
-                <li key={file.name}>{file.name}</li>
+                <li key={file.name}>File Added: {file.name}</li>
               ))}
             </ul>
           )}
