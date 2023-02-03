@@ -2,7 +2,6 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import Head from "next/head";
 import { useState } from "react";
-import { fileURLToPath } from "url";
 import FileInput from "../common/components/FileInput";
 
 // import Link from "next/link";
@@ -17,9 +16,6 @@ const Home: NextPage = () => {
   const [videoSources, setVideoSources] = useState<(string)[]>([]);
 
   const handleFileChange = (selectedFiles: FileList) => {
-    if (selectedFiles.length) {
-
-    }
     if (selectedFiles) {
       Array.from(selectedFiles).forEach((file: File) => {
         const reader = new FileReader();
@@ -53,14 +49,14 @@ const Home: NextPage = () => {
         </header>
         <main className="flex flex-col items-center">
           {videoSources ? videoSources.map((video, index) => {
-            return <video src={video} key={`video-no-${index}`} width={480} height={480} ></video>
+            return <video controls src={video} key={`video-${index}`} width={480} height={480} ></video>
           }) : ''}
 
           <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} hideFileChosen={true} />
 
           {imageSources ? imageSources.map((image, index) => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return <Image src={image} alt={`Image Number ${index}. File Name: ${images[index]!.name}`} key={`img-no-${index}`} width={480} height={480}></Image>
+            return <Image src={image} alt={`Image Number ${index}. File Name: ${images[index]!.name}`} key={`img-${index}`} width={480} height={480}></Image>
           }) : ''}
         </main>
       </div>
