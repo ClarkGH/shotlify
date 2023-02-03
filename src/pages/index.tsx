@@ -17,16 +17,18 @@ const Home: NextPage = () => {
   const [imageSources, setImageSources] = useState<(string)[]>([]);
 
   const handleFileChange = (selectedFiles: FileList) => {
-    if (selectedFiles) {
-      [...selectedFiles].forEach((file: File) => {
-        if (file.type.startsWith('image/')) {
-          setImages([file, ...images]);
-          console.log(file.name);
+    if (selectedFiles.length) {
 
+    }
+    if (selectedFiles) {
+      Array.from(selectedFiles).forEach((file: File) => {
+        if (file.type.startsWith('image/')) {
+          
           const reader = new FileReader();
           reader.readAsDataURL(file);
-          reader.onloadend = () => {
-            setImageSources([reader.result as string, ...imageSources]);
+          reader.onload = () => {
+            setImages((prevImages) => [file, ...prevImages]);
+            setImageSources((prevImageSources) => [reader.result as string, ...prevImageSources]);
           };
           
         } else {
@@ -51,7 +53,8 @@ const Home: NextPage = () => {
           <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} hideFileChosen={true} />
 
           {imageSources ? imageSources.map((image, index) => {
-            return <Image src={image} alt={`Image Number ${index}. File Name: ${images[index].name}`} key={`img-no-${index}`} width={480} height={480}></Image>
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return <Image src={image} alt={`Image Number ${index}. File Name: ${images[index]!.name}`} key={`img-no-${index}`} width={480} height={480}></Image>
           }) : ''}
         </main>
       </div>

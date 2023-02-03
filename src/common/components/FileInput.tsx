@@ -1,7 +1,7 @@
 import type {FC, ChangeEvent} from "react";
 
 interface FileInputProps {
-    onFilesChange: (selectedFiles: FileList | null) => void;
+    onFilesChange: (selectedFiles: FileList) => void;
     hideFileChosen?: boolean;
     accept?: string;
 }
@@ -10,7 +10,7 @@ const FileInput: FC<FileInputProps> = ({ onFilesChange, accept, hideFileChosen }
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { files } = event.target;
 
-        onFilesChange(files);
+        if (files) onFilesChange(files);
     };
 
     return (
