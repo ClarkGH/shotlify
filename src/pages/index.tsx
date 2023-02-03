@@ -66,6 +66,7 @@ const Home: NextPage = () => {
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <div className="flex min-h-screen flex-col items-center bg-[#A0AECD]">
         <header className="mb-8">
           <h1 className="text-black text-6xl mt-12">Shotlify</h1>
@@ -74,15 +75,17 @@ const Home: NextPage = () => {
         <main className="flex flex-col items-center">
           {videoSources ? videoSources.map((video, index) => {
             return (
-              <div key={`video-${index}`}>
+              <div className="flex flex-col gap-4 mb-4" key={`video-${index}`}>
                 <video controls src={video} width={480} height={480}></video>
-                <button onClick={() => captureImageFromVideo(index)}>Get You a Screenshot</button>
+
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => captureImageFromVideo(index)}>
+                  Get You a Screenshot
+                </button>
               </div>
             )
           }) : ''}
 
-          <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} hideFileChosen={true} />
-
+          <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} />
           {imageSources ? imageSources.map((image, index) => {
             return <Image src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={480} height={480}></Image>
           }) : ''}
