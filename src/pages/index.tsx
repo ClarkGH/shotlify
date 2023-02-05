@@ -86,8 +86,9 @@ const Home: NextPage = () => {
           }) : ''}
 
           <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} />
+
           {imageSources ? imageSources.map((image, index) => {
-            return <Image src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={480} height={480}></Image>
+            return <Image className="my-4" src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={480} height={480}></Image>
           }) : ''}
         </main>
       </div>
