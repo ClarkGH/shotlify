@@ -2,16 +2,16 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
-const fileSchema = z.object({
-  files: z.array(z.string()),
+const imageSchema = z.object({
+  images: z.array(z.string()),
 });
 
 export const processorRouter = createTRPCRouter({
   processImages: publicProcedure
-    .input(fileSchema)
+    .input(imageSchema)
     .mutation(({ input }) => {
       return {
-        files: `Wakka ${input.files[0] || 'hi'} wakka`,
+        images: input.images,
       };
     }),
 });

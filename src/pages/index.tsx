@@ -10,7 +10,7 @@ import { api } from "../utils/api";
 const ACCEPTED_FILE_TYPES = "image/png, image/gif, image/jpeg, video/*";
 
 const Home: NextPage = () => {
-  const [images, setImages] = useState<{files: string[]}>({ files: [] });
+  const [images, setImages] = useState<{images: string[]}>({ images: [] });
   const [imageSources, setImageSources] = useState<(string)[]>([]);
   const [videoSources, setVideoSources] = useState<(string)[]>([]);
 
@@ -32,7 +32,8 @@ const Home: NextPage = () => {
     const blobFile = new File([blob], `screenshot_i_${index}.jpeg`);
 
     setImages((prevState) => {
-      return {files: [JSON.stringify(blobFile) , ...prevState.files]}
+      console.log('prev', prevState);
+      return {images: [JSON.stringify(blobFile) , ...prevState.images]};
     });
 
     setImageSources((prevImageSources) => [canvas.toDataURL('image/jpeg'), ...prevImageSources]);
@@ -41,17 +42,25 @@ const Home: NextPage = () => {
   // Event Handlers.
   const imageMutation = api.processor.processImages.useMutation();
 
-  const handleFileChange = (selectedFiles: FileList) => {
-    if (selectedFiles) {
-      Array.from(selectedFiles).forEach((file: File) => {
+  const handleImageSubmit = () => {
+    console.log('hi');
+    debugger;
+
+    imageMutation.mutate(images);
+  }
+
+  const handleImageChange = (selectedImages: FileList) => {
+    if (selectedImages) {
+      Array.from(selectedImages).forEach((image: File) => {
         const reader = new FileReader();
   
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(image);
 
-        if (file.type.startsWith('image/')) {
+        if (image.type.startsWith('image/')) {
           reader.onload = () => {
             setImages((prevState) => {
-              return {files: [JSON.stringify(file) , ...prevState.files]}
+              console.log('prev', prevState);
+              return {images: [JSON.stringify(image) , ...prevState.images]};
             });
 
             setImageSources((prevImageSources) => [reader.result as string, ...prevImageSources]);
@@ -94,10 +103,10 @@ const Home: NextPage = () => {
             )
           }) : ''}
 
-          <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} />
+          <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleImageChange} />
 
           <div className="my-4">
-            <button onClick={handleFileSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload Images</button>
+            <button onClick={handleImageSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload Images</button>
           </div>
 
           {imageSources ? imageSources.map((image, index) => {
