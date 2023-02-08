@@ -28,12 +28,8 @@ const Home: NextPage = () => {
 
     ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const blob = new Blob([canvas.toDataURL('image/jpeg')], { type: 'image/jpeg' });
-    const blobFile = new File([blob], `screenshot_i_${index}.jpeg`);
-
     setImages((prevState) => {
-      console.log('prev', prevState);
-      return {images: [JSON.stringify(blobFile) , ...prevState.images]};
+      return {images: [JSON.stringify(canvas.toDataURL('image/jpeg')), ...prevState.images]};
     });
 
     setImageSources((prevImageSources) => [canvas.toDataURL('image/jpeg'), ...prevImageSources]);
@@ -43,9 +39,6 @@ const Home: NextPage = () => {
   const imageMutation = api.processor.processImages.useMutation();
 
   const handleImageSubmit = () => {
-    console.log('hi');
-    debugger;
-
     imageMutation.mutate(images);
   }
 
@@ -59,8 +52,7 @@ const Home: NextPage = () => {
         if (image.type.startsWith('image/')) {
           reader.onload = () => {
             setImages((prevState) => {
-              console.log('prev', prevState);
-              return {images: [JSON.stringify(image) , ...prevState.images]};
+              return {images: [JSON.stringify(reader.result as string) , ...prevState.images]};
             });
 
             setImageSources((prevImageSources) => [reader.result as string, ...prevImageSources]);
