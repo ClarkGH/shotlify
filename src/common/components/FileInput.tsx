@@ -6,7 +6,7 @@ interface FileInputProps {
     accept?: string;
 }
 
-const FileInput: FC<FileInputProps> = ({ onFilesChange, accept, hideFileChosen }) => {
+const FileInput: FC<FileInputProps> = ({ onFilesChange, accept }) => {
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { files } = event.target;
 
