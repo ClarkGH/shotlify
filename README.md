@@ -1,4 +1,5 @@
 # Shotlify
+Currently running on https://slideshow-sigma.vercel.app/
 
 1. Upload a video.
 2. Take screenshots. 
