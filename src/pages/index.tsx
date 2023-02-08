@@ -1,42 +1,20 @@
 import { useState } from "react";
 import { type NextPage } from "next";
-import Image from "next/image";
-import Head from "next/head";
 
+import Head from "next/head";
+import Image from "next/image";
 import FileInput from "../common/components/FileInput";
 
-// import Link from "next/link";
-// import { api } from "../utils/api";
-// const hello = api.example.hello.useQuery({ text: "from tRPC" });
+import { api } from "../utils/api";
 
 const ACCEPTED_FILE_TYPES = "image/png, image/gif, image/jpeg, video/*";
 
 const Home: NextPage = () => {
-  const [images, setImages] = useState<File[]>([]);
+  const [images, setImages] = useState<{files: string[]}>({ files: [] });
   const [imageSources, setImageSources] = useState<(string)[]>([]);
   const [videoSources, setVideoSources] = useState<(string)[]>([]);
 
-  const handleFileChange = (selectedFiles: FileList) => {
-    if (selectedFiles) {
-      Array.from(selectedFiles).forEach((file: File) => {
-        const reader = new FileReader();
-  
-        reader.readAsDataURL(file);
-
-        if (file.type.startsWith('image/')) {
-          reader.onload = () => {
-            setImages((prevImages) => [file, ...prevImages]);
-            setImageSources((prevImageSources) => [reader.result as string, ...prevImageSources]);
-          };
-        } else {
-          reader.onload = () => {
-            setVideoSources((prevVideoSources) => [reader.result as string, ...prevVideoSources]);
-          };
-        }
-      });
-    }
-  }
-
+  // Methods
   const captureImageFromVideo = (index: number) => {
     const video = document.querySelectorAll('video')[index];
     const canvas = document.createElement('canvas');
@@ -53,9 +31,40 @@ const Home: NextPage = () => {
     const blob = new Blob([canvas.toDataURL('image/jpeg')], { type: 'image/jpeg' });
     const blobFile = new File([blob], `screenshot_i_${index}.jpeg`);
 
-    setImages((prevImages) => [...prevImages, blobFile]);
+    setImages((prevState) => {
+      return {files: [JSON.stringify(blobFile) , ...prevState.files]}
+    });
+
     setImageSources((prevImageSources) => [canvas.toDataURL('image/jpeg'), ...prevImageSources]);
   }
+
+  // Event Handlers.
+  const imageMutation = api.processor.processImages.useMutation();
+
+  const handleFileChange = (selectedFiles: FileList) => {
+    if (selectedFiles) {
+      Array.from(selectedFiles).forEach((file: File) => {
+        const reader = new FileReader();
+  
+        reader.readAsDataURL(file);
+
+        if (file.type.startsWith('image/')) {
+          reader.onload = () => {
+            setImages((prevState) => {
+              return {files: [JSON.stringify(file) , ...prevState.files]}
+            });
+
+            setImageSources((prevImageSources) => [reader.result as string, ...prevImageSources]);
+          };
+        } else {
+          reader.onload = () => {
+            setVideoSources((prevVideoSources) => [reader.result as string, ...prevVideoSources]);
+          };
+        }
+      });
+    }
+  }
+
 
   return (
     <>
@@ -86,6 +95,11 @@ const Home: NextPage = () => {
           }) : ''}
 
           <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} />
+
+          <div className="my-4">
+            <button onClick={handleFileSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload Images</button>
+          </div>
+
           {imageSources ? imageSources.map((image, index) => {
             return <Image src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={480} height={480}></Image>
           }) : ''}

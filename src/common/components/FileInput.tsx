@@ -15,7 +15,7 @@ const FileInput: FC<FileInputProps> = ({ onFilesChange, accept, hideFileChosen }
 
     return (
         <input
-            className="file:rounded file:border-0 file:text-md file:font-bold file:text-white file:bg-blue-500 hover:file:bg-blue-700 my-4"
+            className="file:rounded file:border-0 file:text-md file:font-bold file:text-white file:bg-blue-500 hover:file:bg-blue-700"
             type="file"
             accept={accept}
             multiple 
