@@ -97,9 +97,9 @@ const Home: NextPage = () => {
 
           <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleImageChange} />
 
-          <div className="my-4">
+          {/* <div className="my-4">
             <button onClick={handleImageSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload Images</button>
-          </div>
+          </div> */}
 
           {imageSources ? imageSources.map((image, index) => {
             return <Image className="my-4" src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={480} height={480}></Image>
