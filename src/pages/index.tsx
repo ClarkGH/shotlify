@@ -30,10 +30,10 @@ const Home: NextPage = () => {
     ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     setImages((prevState) => {
-      return {images: [JSON.stringify(canvas.toDataURL('image/jpeg')), ...prevState.images]};
+      return {images: [...prevState.images, JSON.stringify(canvas.toDataURL('image/jpeg'))]};
     });
 
-    setImageSources((prevImageSources) => [canvas.toDataURL('image/jpeg'), ...prevImageSources]);
+    setImageSources((prevImageSources) => [...prevImageSources, canvas.toDataURL('image/jpeg'), ]);
   }
 
   const handleFileChange = (selectedImages: FileList) => {
@@ -46,14 +46,14 @@ const Home: NextPage = () => {
         if (image.type.startsWith('image/')) {
           reader.onload = () => {
             setImages((prevState) => {
-              return {images: [JSON.stringify(reader.result as string) , ...prevState.images]};
+              return {images: [...prevState.images, JSON.stringify(reader.result as string)]};
             });
 
-            setImageSources((prevImageSources) => [reader.result as string, ...prevImageSources]);
+            setImageSources((prevImageSources) => [...prevImageSources, reader.result as string]);
           };
         } else {
           reader.onload = () => {
-            setVideoSources((prevVideoSources) => [reader.result as string, ...prevVideoSources]);
+            setVideoSources((prevVideoSources) => [...prevVideoSources, reader.result as string]);
           };
         }
       });
