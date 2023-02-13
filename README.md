@@ -1,7 +1,7 @@
 # Shotlify
 Currently running on https://slideshow-sigma.vercel.app/
 
-1. Upload a video.
+1. Upload a single or multiple videos.
 2. Take screenshots, or upload your own images. 
 3. (Coming soon...ish) Get a slideshow back from the images/screenshots.
 
