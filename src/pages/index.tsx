@@ -5,10 +5,8 @@ import Head from "next/head";
 import Image from "next/image";
 import FileInput from "../common/components/FileInput";
 
-import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import { CarouselProvider, Slider, Slide, DotGroup } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
-
-// import { api } from "../utils/api";
 
 const ACCEPTED_FILE_TYPES = "image/png, image/gif, image/jpeg, video/*";
 
@@ -37,13 +35,6 @@ const Home: NextPage = () => {
 
     setImageSources((prevImageSources) => [canvas.toDataURL('image/jpeg'), ...prevImageSources]);
   }
-
-  // Event Handlers.
-  // const imageMutation = api.processor.processImages.useMutation();
-
-  // const handleImageSubmit = () => {
-  //   imageMutation.mutate(images);
-  // }
 
   const handleFileChange = (selectedImages: FileList) => {
     if (selectedImages) {
@@ -88,7 +79,7 @@ const Home: NextPage = () => {
         <main>
           {videoSources.length
             ? <CarouselProvider
-                className="mb-4"
+                className="mb-4 transition-opacity max-h-{500}"
                 naturalSlideWidth={360}
                 naturalSlideHeight={500}
                 totalSlides={videoSources.length}
@@ -106,20 +97,11 @@ const Home: NextPage = () => {
                   })}
                 </Slider>
 
-                {videoSources.length > 1
-                  ? <div className="flex flex-auto gap-4 mt-4">
-                    <ButtonBack className="basis-1/2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back</ButtonBack>
-                    <ButtonNext className="basis-1/2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Next</ButtonNext>
-                  </div> : ''}
- 
+                {videoSources.length > 1 ? <DotGroup className="flex gap-2 mt-4 font-semibold justify-center align items center" dotNumbers /> : ''}
               </CarouselProvider> 
           : ''}
 
           <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} />
-
-          {/* <div className="my-4">
-            <button onClick={handleImageSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload Images</button>
-          </div> */}
 
           {imageSources.length ? imageSources.map((image, index) => {
             return <Image className="my-4" src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={480} height={320}></Image>
