@@ -79,7 +79,7 @@ const Home: NextPage = () => {
         <main>
           {videoSources.length
             ? <CarouselProvider
-                className="mb-4 max-h-{500}"
+                className="mb-4 max-h-{500} w-80"
                 naturalSlideWidth={360}
                 naturalSlideHeight={500}
                 totalSlides={videoSources.length}
@@ -88,6 +88,7 @@ const Home: NextPage = () => {
                   {videoSources.map((video, index) => {
                     return (
                       <Slide innerClassName="grid grid-cols-1 gap-4 justify-items-center items-end" key={`slide-${index}`} index={index}>
+                          <h3>Video #{index}</h3>
                           <video controls className="max-h-80 max-w-80" src={video} width={320} height={320}></video>
                           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => captureImageFromVideo(index)}>
                             Capture Image
@@ -97,7 +98,7 @@ const Home: NextPage = () => {
                   })}
                 </Slider>
 
-                {videoSources.length > 1 ? <DotGroup className="flex gap-2 mt-4 font-semibold justify-center align items center" dotNumbers /> : ''}
+                {videoSources.length > 1 ? <DotGroup className="flex flex-wrap gap-2 mt-4 font-semibold justify-center" dotNumbers /> : ''}
               </CarouselProvider> 
           : ''}
 
@@ -105,7 +106,7 @@ const Home: NextPage = () => {
 
           {imageSources.length
             ? <CarouselProvider
-                className="mb-4"
+                className="mb-4 w-72"
                 naturalSlideWidth={360}
                 naturalSlideHeight={500}
                 totalSlides={imageSources.length}
@@ -113,15 +114,16 @@ const Home: NextPage = () => {
                 <Slider>
                   {imageSources.map((image, index) => {
                     return (
-                      <Slide innerClassName="grid grid-cols-1 gap-4 justify-items-center items-center" key={`slide-${index}`} index={index}>
+                      <Slide innerClassName="flex grid grid-col-1 justify-items-center items-end" key={`slide-${index}`} index={index}>
+                        <h3>Image #{index}</h3>
                         <Image className="my-4" src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={320} height={320}></Image>
                       </Slide>
                     )
                   })}
                 </Slider>
 
-                {imageSources.length > 1 ? <DotGroup className="flex gap-2 mt-4 font-semibold justify-center align items center" dotNumbers /> : ''}
-              </CarouselProvider> 
+                {imageSources.length > 1 ? <DotGroup className="flex flex-wrap w-72 gap-2 mt-4 font-semibold justify-center" dotNumbers /> : ''}
+              </CarouselProvider>
           : ''}
         </main>
       </div>
