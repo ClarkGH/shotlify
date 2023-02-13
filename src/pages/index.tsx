@@ -79,7 +79,7 @@ const Home: NextPage = () => {
         <main>
           {videoSources.length
             ? <CarouselProvider
-                className="mb-4 transition-opacity max-h-{500}"
+                className="mb-4 max-h-{500}"
                 naturalSlideWidth={360}
                 naturalSlideHeight={500}
                 totalSlides={videoSources.length}
@@ -103,9 +103,26 @@ const Home: NextPage = () => {
 
           <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} />
 
-          {imageSources.length ? imageSources.map((image, index) => {
-            return <Image className="my-4" src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={480} height={320}></Image>
-          }) : ''}
+          {imageSources.length
+            ? <CarouselProvider
+                className="mb-4"
+                naturalSlideWidth={360}
+                naturalSlideHeight={500}
+                totalSlides={imageSources.length}
+              >
+                <Slider>
+                  {imageSources.map((image, index) => {
+                    return (
+                      <Slide innerClassName="grid grid-cols-1 gap-4 justify-items-center items-center" key={`slide-${index}`} index={index}>
+                        <Image className="my-4" src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={320} height={320}></Image>
+                      </Slide>
+                    )
+                  })}
+                </Slider>
+
+                {imageSources.length > 1 ? <DotGroup className="flex gap-2 mt-4 font-semibold justify-center align items center" dotNumbers /> : ''}
+              </CarouselProvider> 
+          : ''}
         </main>
       </div>
     </>
