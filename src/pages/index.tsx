@@ -5,6 +5,9 @@ import Head from "next/head";
 import Image from "next/image";
 import FileInput from "../common/components/FileInput";
 
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import 'pure-react-carousel/dist/react-carousel.es.css';
+
 import { api } from "../utils/api";
 
 const ACCEPTED_FILE_TYPES = "image/png, image/gif, image/jpeg, video/*";
@@ -82,18 +85,33 @@ const Home: NextPage = () => {
           <h1 className="text-black text-6xl mt-12">Shotlify</h1>
         </header>
 
-        <main className="flex flex-col items-center">
-          {videoSources ? videoSources.map((video, index) => {
-            return (
-              <div className="flex flex-col gap-4 mb-4" key={`video-${index}`}>
-                <video controls src={video} width={480} height={480}></video>
+        <main>
+          {videoSources.length
+            ? <CarouselProvider
+                naturalSlideWidth={480}
+                naturalSlideHeight={760}
+                totalSlides={videoSources.length}
+              >
+                <Slider>
+                  {videoSources.map((video, index) => {
+                    return (
+                      <Slide key={`slide-${index}`} index={index}>
+                        <div className="flex flex-col gap-4 mb-4 items-center">
+                          <video controls className="h-full" src={video} width={360} height={480}></video>
 
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => captureImageFromVideo(index)}>
-                  Get You a Screenshot
-                </button>
-              </div>
-            )
-          }) : ''}
+                          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => captureImageFromVideo(index)}>
+                            Get You a Screenshot
+                          </button>
+                        </div>
+                      </Slide>
+                    )
+                  })}
+                </Slider>
+
+                {videoSources.length > 1 ? <ButtonBack>Back</ButtonBack> : ''}
+                {videoSources.length > 1 ? <ButtonNext>Next</ButtonNext> : ''}
+              </CarouselProvider> 
+          : ''}
 
           <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleImageChange} />
 
