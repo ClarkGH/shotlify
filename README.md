@@ -20,7 +20,7 @@ Main libs:
 - [Next.js](https://nextjs.org)
 - [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
-- [Pure React Carouself](https://github.com/express-labs/pure-react-carousel)
+- [Pure React Carousel](https://github.com/express-labs/pure-react-carousel)
 
 ## Licensing and Legalese
 ffMPEG falls under under the public GPL 2.0 license. 

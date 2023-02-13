@@ -45,7 +45,7 @@ const Home: NextPage = () => {
   //   imageMutation.mutate(images);
   // }
 
-  const handleImageChange = (selectedImages: FileList) => {
+  const handleFileChange = (selectedImages: FileList) => {
     if (selectedImages) {
       Array.from(selectedImages).forEach((image: File) => {
         const reader = new FileReader();
@@ -89,7 +89,7 @@ const Home: NextPage = () => {
           {videoSources.length
             ? <CarouselProvider
                 className="mb-4"
-                naturalSlideWidth={480}
+                naturalSlideWidth={360}
                 naturalSlideHeight={500}
                 totalSlides={videoSources.length}
               >
@@ -97,7 +97,7 @@ const Home: NextPage = () => {
                   {videoSources.map((video, index) => {
                     return (
                       <Slide innerClassName="grid grid-cols-1 gap-4 justify-items-center items-end" key={`slide-${index}`} index={index}>
-                          <video controls className="max-h-80" src={video} width={320} height={320}></video>
+                          <video controls className="max-h-80 max-w-80" src={video} width={320} height={320}></video>
                           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => captureImageFromVideo(index)}>
                             Capture Image
                           </button>
@@ -115,13 +115,13 @@ const Home: NextPage = () => {
               </CarouselProvider> 
           : ''}
 
-          <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleImageChange} />
+          <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} />
 
           {/* <div className="my-4">
             <button onClick={handleImageSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload Images</button>
           </div> */}
 
-          {imageSources ? imageSources.map((image, index) => {
+          {imageSources.length ? imageSources.map((image, index) => {
             return <Image className="my-4" src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={480} height={320}></Image>
           }) : ''}
         </main>
