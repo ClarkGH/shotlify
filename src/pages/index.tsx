@@ -8,7 +8,7 @@ import FileInput from "../common/components/FileInput";
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
-import { api } from "../utils/api";
+// import { api } from "../utils/api";
 
 const ACCEPTED_FILE_TYPES = "image/png, image/gif, image/jpeg, video/*";
 
@@ -39,11 +39,11 @@ const Home: NextPage = () => {
   }
 
   // Event Handlers.
-  const imageMutation = api.processor.processImages.useMutation();
+  // const imageMutation = api.processor.processImages.useMutation();
 
-  const handleImageSubmit = () => {
-    imageMutation.mutate(images);
-  }
+  // const handleImageSubmit = () => {
+  //   imageMutation.mutate(images);
+  // }
 
   const handleImageChange = (selectedImages: FileList) => {
     if (selectedImages) {
@@ -88,39 +88,41 @@ const Home: NextPage = () => {
         <main>
           {videoSources.length
             ? <CarouselProvider
+                className="mb-4"
                 naturalSlideWidth={480}
-                naturalSlideHeight={760}
+                naturalSlideHeight={500}
                 totalSlides={videoSources.length}
               >
                 <Slider>
                   {videoSources.map((video, index) => {
                     return (
-                      <Slide key={`slide-${index}`} index={index}>
-                        <div className="flex flex-col gap-4 mb-4 items-center">
-                          <video controls className="h-full" src={video} width={360} height={480}></video>
-
+                      <Slide innerClassName="grid grid-cols-1 gap-4 justify-items-center items-end" key={`slide-${index}`} index={index}>
+                          <video controls className="max-h-80" src={video} width={320} height={320}></video>
                           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => captureImageFromVideo(index)}>
-                            Get You a Screenshot
+                            Capture Image
                           </button>
-                        </div>
                       </Slide>
                     )
                   })}
                 </Slider>
 
-                {videoSources.length > 1 ? <ButtonBack>Back</ButtonBack> : ''}
-                {videoSources.length > 1 ? <ButtonNext>Next</ButtonNext> : ''}
+                {videoSources.length > 1
+                  ? <div className="flex flex-auto gap-4 mt-4">
+                    <ButtonBack className="basis-1/2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back</ButtonBack>
+                    <ButtonNext className="basis-1/2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Next</ButtonNext>
+                  </div> : ''}
+ 
               </CarouselProvider> 
           : ''}
 
           <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleImageChange} />
 
-          <div className="my-4">
+          {/* <div className="my-4">
             <button onClick={handleImageSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload Images</button>
-          </div>
+          </div> */}
 
           {imageSources ? imageSources.map((image, index) => {
-            return <Image className="my-4" src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={480} height={480}></Image>
+            return <Image className="my-4" src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={480} height={320}></Image>
           }) : ''}
         </main>
       </div>
