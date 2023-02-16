@@ -37,6 +37,12 @@ const Home: NextPage = () => {
     });
   };
 
+  const removeVideo = (videoIndex: number) => {
+    setVideoSources((prevState) => {
+      return prevState.filter((_, index): boolean => index !== videoIndex);
+    });
+  };
+
   const handleFileChange = (selectedImages: FileList) => {
     if (selectedImages) {
       Array.from(selectedImages).forEach((image: File) => {
@@ -84,12 +90,14 @@ const Home: NextPage = () => {
                 <Slider>
                   {videoSources.map((video, index) => {
                     return (
-                      <Slide innerClassName="grid grid-cols-1 gap-4 justify-items-center items-end" key={`slide-${index}`} index={index}>
-                          <h3>Video #{index}</h3>
-                          <video controls className="max-h-80 max-w-80" src={video} width={320} height={320}></video>
-                          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => captureImageFromVideo(index)}>
+                      <Slide innerClassName="grid grid-cols-1 justify-items-center" key={`slide-${index}`} index={index}>
+                          <video controls className="max-h-80 max-w-80 self-center" src={video} width={320} height={320}></video>
+
+                          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded self-end" onClick={() => captureImageFromVideo(index)}>
                             Capture Image
                           </button>
+
+                          <button onClick={() => removeVideo(index)} className="absolute top-6 right-2 after:content-['X'] bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded" />
                       </Slide>
                     )
                   })}
@@ -111,9 +119,7 @@ const Home: NextPage = () => {
                 <Slider>
                   {imageSources.map((image, index) => {
                     return (
-                      <Slide innerClassName="flex grid grid-col-1 justify-items-center items-end" key={`slide-${index}`} index={index}>
-                        <h3>Image #{index + 1}</h3>
-
+                      <Slide innerClassName="grid grid-col-1 justify-items-center items-start" key={`slide-${index}`} index={index}>
                         <div className="relative">
                           <button onClick={() => removeImage(index)} className="absolute top-6 right-2 after:content-['X'] bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded" />
 
