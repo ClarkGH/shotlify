@@ -11,7 +11,6 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 const ACCEPTED_FILE_TYPES = "image/png, image/gif, image/jpeg, video/*";
 
 const Home: NextPage = () => {
-  const [images, setImages] = useState<{images: string[]}>({ images: [] });
   const [imageSources, setImageSources] = useState<(string)[]>([]);
   const [videoSources, setVideoSources] = useState<(string)[]>([]);
 
@@ -29,12 +28,14 @@ const Home: NextPage = () => {
 
     ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    setImages((prevState) => {
-      return {images: [...prevState.images, JSON.stringify(canvas.toDataURL('image/jpeg'))]};
-    });
-
     setImageSources((prevImageSources) => [...prevImageSources, canvas.toDataURL('image/jpeg'), ]);
-  }
+  };
+
+  const removeImage = (imageIndex: number) => {
+    setImageSources((prevState) => {
+      return prevState.filter((_, index): boolean => index !== imageIndex);
+    });
+  };
 
   const handleFileChange = (selectedImages: FileList) => {
     if (selectedImages) {
@@ -45,10 +46,6 @@ const Home: NextPage = () => {
 
         if (image.type.startsWith('image/')) {
           reader.onload = () => {
-            setImages((prevState) => {
-              return {images: [...prevState.images, JSON.stringify(reader.result as string)]};
-            });
-
             setImageSources((prevImageSources) => [...prevImageSources, reader.result as string]);
           };
         } else {
@@ -58,7 +55,7 @@ const Home: NextPage = () => {
         }
       });
     }
-  }
+  };
 
 
   return (
@@ -115,8 +112,13 @@ const Home: NextPage = () => {
                   {imageSources.map((image, index) => {
                     return (
                       <Slide innerClassName="flex grid grid-col-1 justify-items-center items-end" key={`slide-${index}`} index={index}>
-                        <h3>Image #{index}</h3>
-                        <Image className="my-4" src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={320} height={320}></Image>
+                        <h3>Image #{index + 1}</h3>
+
+                        <div className="relative">
+                          <button onClick={() => removeImage(index)} className="absolute top-6 right-2 after:content-['X'] bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded" />
+
+                          <Image className="my-4" src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={320} height={320}></Image>
+                        </div>
                       </Slide>
                     )
                   })}
