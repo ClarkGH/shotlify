@@ -28,7 +28,7 @@ const Home: NextPage = () => {
 
     ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    setImageSources((prevImageSources) => [...prevImageSources, canvas.toDataURL('image/jpeg'), ]);
+    setImageSources((prevImageSources) => [...prevImageSources, canvas.toDataURL('image/png')]);
   };
 
   const removeImage = (imageIndex: number) => {
@@ -74,64 +74,137 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="flex min-h-screen flex-col items-center bg-[#A0AECD]">
+      <div className="flex min-h-screen flex-col items-center bg-black">
         <header className="mb-8">
-          <h1 className="text-black text-6xl mt-12">Shotlify</h1>
+          <h1 className="text-6xl mt-12 bg-gradient-to-r from-red-500 via-violet-600 to-blue-500 bg-clip-text text-transparent">Shotlify</h1>
         </header>
 
         <main>
           {videoSources.length
-            ? <CarouselProvider
-                className="mb-4 max-h-{500} w-80"
-                naturalSlideWidth={360}
-                naturalSlideHeight={500}
-                totalSlides={videoSources.length}
-              >
-                <Slider>
-                  {videoSources.map((video, index) => {
-                    return (
-                      <Slide innerClassName="grid grid-cols-1 justify-items-center" key={`slide-${index}`} index={index}>
-                          <video controls className="max-h-80 max-w-80 self-center" src={video} width={320} height={320}></video>
+            ? <>
+              <h2 className="text-2xl bg-gradient-to-r from-red-500 via-violet-600 to-blue-500 bg-clip-text text-transparent">Videos</h2>
 
-                          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded self-end" onClick={() => captureImageFromVideo(index)}>
-                            Capture Image
-                          </button>
+              <CarouselProvider
+                  className="mb-4 max-h-{500} w-80"
+                  naturalSlideWidth={360}
+                  naturalSlideHeight={500}
+                  totalSlides={videoSources.length}
+                > 
+                  <Slider>
+                    {videoSources.map((video, index) => {
+                      return (
+                        <Slide
+                          innerClassName="grid grid-cols-1 justify-items-center gap-4"
+                          key={`slide-${index}`}
+                          index={index}
+                        >
+                            <video
+                              className="max-h-80 max-w-80 self-center"
+                              src={video}
+                              width={320}
+                              height={320}
+                              controls
+                            />
 
-                          <button onClick={() => removeVideo(index)} className="absolute top-6 right-2 after:content-['X'] bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded" />
-                      </Slide>
-                    )
-                  })}
-                </Slider>
+                            <button 
+                              className={`
+                                rounded border-0 text-md
+                                font-bold py-2 px-4
+                                text-white bg-gradient-to-br from-red-500 
+                                via-violet-600 to-blue-400 hover:bg-gradient-to-br
+                                hover:from-red-600 hover:via-violet-700 hover:to-blue-500
+                                self-end
+                              `}
+                              onClick={() => captureImageFromVideo(index)}
+                            >
+                              Capture Image
+                            </button>
 
-                {videoSources.length > 1 ? <DotGroup className="flex flex-wrap gap-2 mt-4 font-semibold justify-center" dotNumbers /> : ''}
-              </CarouselProvider> 
+                            <button 
+                              className={`
+                                bg-gradient-to-r from-red-500 via-violet-600 
+                                to-blue-500 bg-clip-text text-transparent
+                                hover:from-red-600 hover:via-violet-700 hover:to-blue-600
+                                absolute top-4 right-4
+                                after:content-['X'] font-bold px-2
+                                `}
+                                aria-label="remove"
+                              onClick={() => removeVideo(index)} 
+                            />
+                        </Slide>
+                      )
+                    })}
+                  </Slider>
+
+                  {videoSources.length > 1
+                    ? <DotGroup
+                      className={`flex flex-wrap gap-2 mt-4 font-semibold justify-center`}
+                      dotNumbers
+                    /> : ''
+                  }
+                </CarouselProvider> 
+            </>
           : ''}
 
-          <FileInput accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} />
+          <FileInput className="mt-4" accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} />
 
           {imageSources.length
-            ? <CarouselProvider
-                className="mb-4 w-72"
-                naturalSlideWidth={360}
-                naturalSlideHeight={500}
-                totalSlides={imageSources.length}
-              >
-                <Slider>
-                  {imageSources.map((image, index) => {
-                    return (
-                      <Slide innerClassName="grid grid-col-1 justify-items-center items-start" key={`slide-${index}`} index={index}>
-                        <div className="relative">
-                          <button onClick={() => removeImage(index)} className="absolute top-6 right-2 after:content-['X'] bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded" />
+            ? <>
+                <h2 className="text-2xl mt-4 bg-gradient-to-r from-red-500 via-violet-600 to-blue-500 bg-clip-text text-transparent">Images</h2>
 
-                          <Image className="my-4" src={image} alt={`Image Number ${index}.`} key={`img-${index}`} width={320} height={320}></Image>
-                        </div>
-                      </Slide>
-                    )
-                  })}
-                </Slider>
+                <CarouselProvider
+                  className="w-80"
+                  naturalSlideWidth={360}
+                  naturalSlideHeight={500}
+                  totalSlides={imageSources.length}
+                >
+                  <Slider>
+                    {imageSources.map((image, index) => {
+                      return (
+                        <Slide
+                          innerClassName={`grid grid-col-1 justify-items-center items-start`}
+                          key={`slide-${index}`}
+                          index={index}
+                        >
+                          <div className="relative">
+                            <button
+                              className={`
+                                bg-gradient-to-r from-red-500 via-violet-600 
+                                to-blue-500 hover:from-red-600 hover:via-violet-700
+                                hover:to-blue-600 font-bold py-2
+                                px-2 bg-clip-text text-transparent
+                                absolute top-4 right-2
+                                after:content-['X']
+                              `}
+                              aria-label="remove"
+                              onClick={() => removeImage(index)}
+                            />
 
-                {imageSources.length > 1 ? <DotGroup className="flex flex-wrap w-72 gap-2 mt-4 font-semibold justify-center" dotNumbers /> : ''}
-              </CarouselProvider>
+                            <Image
+                              className="my-4"
+                              src={image}
+                              alt={`Image Number ${index}.`}
+                              key={`img-${index}`}
+                              width={320}
+                              height={320}
+                            />
+                          </div>
+                        </Slide>
+                      )
+                    })}
+                  </Slider>
+
+                  {imageSources.length > 1
+                    ? <DotGroup
+                      className={`
+                        flex flex-wrap w-72 gap-2
+                        mt-4 font-semibold justify-center
+                      `}
+                      dotNumbers
+                    />
+                    : ''}
+                </CarouselProvider>
+              </>
           : ''}
         </main>
       </div>
