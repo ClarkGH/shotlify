@@ -76,13 +76,26 @@ const Home: NextPage = () => {
 
       <div className="flex min-h-screen flex-col items-center bg-black">
         <header className="mb-8">
-          <h1 className="text-6xl mt-12 bg-gradient-to-r from-red-500 via-violet-600 to-blue-500 bg-clip-text text-transparent">Shotlify</h1>
+          <h1
+            className={
+              `text-6xl mt-12 bg-gradient-to-r
+              from-red-500 via-violet-600 to-blue-500
+              bg-clip-text text-transparent`} 
+            >
+              Shotlify
+          </h1>
         </header>
 
         <main>
           {videoSources.length
             ? <>
-              <h2 className="text-2xl bg-gradient-to-r from-red-500 via-violet-600 to-blue-500 bg-clip-text text-transparent">Videos</h2>
+              <h2 className={
+                `text-2xl bg-gradient-to-r from-red-500
+                via-violet-600 to-blue-500 bg-clip-text
+                text-transparent`
+              }>
+                Videos
+              </h2>
 
               <CarouselProvider
                   className="mb-4 max-h-{500} w-80"
@@ -107,28 +120,28 @@ const Home: NextPage = () => {
                             />
 
                             <button 
-                              className={`
-                                rounded border-0 text-md
+                              className={
+                                `rounded border-0 text-md
                                 font-bold py-2 px-4
                                 text-white bg-gradient-to-br from-red-500 
                                 via-violet-600 to-blue-400 hover:bg-gradient-to-br
                                 hover:from-red-600 hover:via-violet-700 hover:to-blue-500
-                                self-end
-                              `}
+                                self-end`
+                              }
                               onClick={() => captureImageFromVideo(index)}
                             >
                               Capture Image
                             </button>
 
                             <button 
-                              className={`
-                                bg-gradient-to-r from-red-500 via-violet-600 
+                              className={
+                                `bg-gradient-to-r from-red-500 via-violet-600 
                                 to-blue-500 bg-clip-text text-transparent
                                 hover:from-red-600 hover:via-violet-700 hover:to-blue-600
                                 absolute top-4 right-4
-                                after:content-['X'] font-bold px-2
-                                `}
-                                aria-label="remove"
+                                after:content-['X'] font-bold px-2`
+                              }
+                              aria-label="remove"
                               onClick={() => removeVideo(index)} 
                             />
                         </Slide>
@@ -138,7 +151,12 @@ const Home: NextPage = () => {
 
                   {videoSources.length > 1
                     ? <DotGroup
-                      className={`flex flex-wrap gap-2 mt-4 font-semibold justify-center`}
+                      className={
+                        `flex flex-wrap gap-2
+                        mt-4 font-semibold justify-center
+                        bg-gradient-to-br from-red-500 via-violet-600 
+                        to-blue-400 bg-clip-text text-transparent`
+                      }
                       dotNumbers
                     /> : ''
                   }
@@ -146,11 +164,23 @@ const Home: NextPage = () => {
             </>
           : ''}
 
-          <FileInput className="mt-4" accept={ACCEPTED_FILE_TYPES} onFilesChange={handleFileChange} />
+          <FileInput
+            className="mt-4"
+            accept={ACCEPTED_FILE_TYPES}
+            onFilesChange={handleFileChange}
+          />
 
           {imageSources.length
             ? <>
-                <h2 className="text-2xl mt-4 bg-gradient-to-r from-red-500 via-violet-600 to-blue-500 bg-clip-text text-transparent">Images</h2>
+                <h2
+                  className={
+                    `text-2xl mt-4 bg-gradient-to-r
+                    from-red-500 via-violet-600 to-blue-500
+                    bg-clip-text text-transparent`
+                  }
+                >
+                  Images
+                </h2>
 
                 <CarouselProvider
                   className="w-80"
@@ -199,6 +229,8 @@ const Home: NextPage = () => {
                       className={`
                         flex flex-wrap w-72 gap-2
                         mt-4 font-semibold justify-center
+                        bg-gradient-to-br from-red-500 via-violet-600 
+                        to-blue-400 bg-clip-text text-transparent
                       `}
                       dotNumbers
                     />
