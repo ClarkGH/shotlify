@@ -221,7 +221,7 @@ const Home: NextPage = () => {
                             <div
                               className={
                                 `bg-gray-300 hover:bg-gray-400 absolute
-                                top-2 right-2 rounded-md`
+                                top-6 right-2 rounded-md`
                               }
                             >
                               <button
