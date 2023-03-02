@@ -25,6 +25,7 @@ if (!_clientEnv.success) {
 for (let key of Object.keys(_clientEnv.data)) {
   if (!key.startsWith("NEXT_PUBLIC_")) {
     console.warn(
+      // eslint-disable-next-line max-len
       `❌ Invalid public environment variable name: ${key}. It must begin with 'NEXT_PUBLIC_'`,
     );
 
