@@ -185,7 +185,7 @@ const Home: NextPage = () => {
                 <CarouselProvider
                   className="w-80"
                   naturalSlideWidth={360}
-                  naturalSlideHeight={500}
+                  naturalSlideHeight={600}
                   totalSlides={imageSources.length}
                 >
                   <Slider>
@@ -216,7 +216,7 @@ const Home: NextPage = () => {
                               alt={`Image Number ${index}.`}
                               key={`img-${index}`}
                               width={320}
-                              height={320}
+                              height={600}
                             />
                           </div>
                         </Slide>
