@@ -17,6 +17,10 @@
   "plugins": ["@typescript-eslint"],
   "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   "rules": {
-    "@typescript-eslint/consistent-type-imports": "warn"
+    "@typescript-eslint/consistent-type-imports": "warn",
+    "no-trailing-spaces": "error",
+    "eol-last": "error",
+    "max-len": ["error", { "code": 80 }],
+    "semi": ["error", "always"]
   }
 }
