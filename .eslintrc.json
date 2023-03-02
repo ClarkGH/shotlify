@@ -19,6 +19,8 @@
   "rules": {
     "@typescript-eslint/consistent-type-imports": "warn",
     "no-trailing-spaces": "error",
-    "eol-last": "error"
+    "eol-last": "error",
+    "max-len": ["error", { "code": 80 }],
+    "semi": ["error", "always"]
   }
 }

@@ -28,7 +28,9 @@ const Home: NextPage = () => {
 
     ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    setImageSources((prevImageSources) => [...prevImageSources, canvas.toDataURL('image/png')]);
+    setImageSources((prevImageSources) => {
+      return [...prevImageSources, canvas.toDataURL('image/png')];
+    });
   };
 
   const removeImage = (imageIndex: number) => {
@@ -52,11 +54,15 @@ const Home: NextPage = () => {
 
         if (image.type.startsWith('image/')) {
           reader.onload = () => {
-            setImageSources((prevImageSources) => [...prevImageSources, reader.result as string]);
+            setImageSources((prevImageSources) => {
+              return [...prevImageSources, reader.result as string];
+            });
           };
         } else {
           reader.onload = () => {
-            setVideoSources((prevVideoSources) => [...prevVideoSources, reader.result as string]);
+            setVideoSources((prevVideoSources) => {
+              return [...prevVideoSources, reader.result as string];
+            });
           };
         }
       });
@@ -69,7 +75,11 @@ const Home: NextPage = () => {
       <Head>
         <title>Shotlify</title>
 
-        <meta name="description" content="Take screenshots and create a slideshow with your uploaded media!" />
+        <meta
+          name="description"
+          // eslint-disable-next-line max-len
+          content="Take screenshots and create a slideshow with your uploaded media!"
+        />
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -107,7 +117,9 @@ const Home: NextPage = () => {
                     {videoSources.map((video, index) => {
                       return (
                         <Slide
-                          innerClassName="grid grid-cols-1 justify-items-center gap-4"
+                          innerClassName={
+                            `grid grid-cols-1 justify-items-center gap-4`
+                          }
                           key={`slide-${index}`}
                           index={index}
                         >
@@ -124,28 +136,35 @@ const Home: NextPage = () => {
                                 `rounded border-0 text-md
                                 font-bold py-2 px-4
                                 text-white bg-gradient-to-br from-red-500
-                                via-violet-600 to-blue-400 hover:bg-gradient-to-br
-                                hover:from-red-600 hover:via-violet-700 hover:to-blue-500
-                                self-end`
+                                via-violet-600 to-blue-400
+                                hover:bg-gradient-to-br hover:from-red-600
+                                hover:via-violet-700 hover:to-blue-500 self-end`
                               }
                               onClick={() => captureImageFromVideo(index)}
                             >
                               Capture Image
                             </button>
 
-                            <button
-                              className={
-                                `bg-gradient-to-r from-red-500 via-violet-600
-                                to-blue-500 bg-clip-text text-transparent
-                                hover:from-red-600 hover:via-violet-700 hover:to-blue-600
-                                absolute top-4 right-4
-                                after:content-['X'] font-bold px-2`
-                              }
-                              aria-label="remove"
-                              onClick={() => removeVideo(index)}
-                            />
+                            <div className={
+                              `bg-gray-300 hover:bg-gray-400 absolute
+                              top-2 right-2 rounded-md`
+                            }>
+                              <button
+                                className={
+                                  `bg-gradient-to-r from-red-500 via-violet-600
+                                  to-blue-500 bg-clip-text text-transparent
+                                  hover:from-red-600 hover:via-violet-700
+                                  hover:to-blue-600 after:content-['X']
+                                  font-bold px-2`
+                                }
+                                aria-label="remove"
+                                onClick={() => removeVideo(index)}
+                              >
+                                <span className="sr-only">Remove video</span>
+                              </button>
+                            </div>
                         </Slide>
-                      )
+                      );
                     })}
                   </Slider>
 
@@ -192,23 +211,33 @@ const Home: NextPage = () => {
                     {imageSources.map((image, index) => {
                       return (
                         <Slide
-                          innerClassName={`grid grid-col-1 justify-items-center items-start`}
+                          innerClassName={
+                            `grid grid-col-1 justify-items-center items-start`
+                          }
                           key={`slide-${index}`}
                           index={index}
                         >
                           <div className="relative">
-                            <button
-                              className={`
-                                bg-gradient-to-r from-red-500 via-violet-600
-                                to-blue-500 hover:from-red-600 hover:via-violet-700
-                                hover:to-blue-600 font-bold py-2
-                                px-2 bg-clip-text text-transparent
-                                absolute top-4 right-2
-                                after:content-['X']
-                              `}
-                              aria-label="remove"
-                              onClick={() => removeImage(index)}
-                            />
+                            <div
+                              className={
+                                `bg-gray-300 hover:bg-gray-400 absolute
+                                top-2 right-2 rounded-md`
+                              }
+                            >
+                              <button
+                                className={
+                                  `bg-gradient-to-r from-red-500 via-violet-600
+                                  to-blue-500 bg-clip-text text-transparent
+                                  hover:from-red-600 hover:via-violet-700
+                                  hover:to-blue-600 after:content-['X']
+                                  font-bold px-2`
+                                }
+                                aria-label="remove"
+                                onClick={() => removeImage(index)}
+                              >
+                                <span className="sr-only">Remove image</span>
+                              </button>
+                            </div>
 
                             <Image
                               className="my-4"
@@ -220,7 +249,7 @@ const Home: NextPage = () => {
                             />
                           </div>
                         </Slide>
-                      )
+                      );
                     })}
                   </Slider>
 
@@ -230,7 +259,7 @@ const Home: NextPage = () => {
                         flex flex-wrap w-72 gap-2
                         mt-4 font-semibold justify-center
                         bg-gradient-to-br from-red-500 via-violet-600
-                        to-blue-400 bg-clip-text text-transparent
+                        to-blue-400 bg-clip-text text-transparent mb-12
                       `}
                       dotNumbers
                     />
