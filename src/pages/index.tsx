@@ -47,7 +47,7 @@ const Home: NextPage = () => {
     if (selectedImages) {
       Array.from(selectedImages).forEach((image: File) => {
         const reader = new FileReader();
-  
+
         reader.readAsDataURL(image);
 
         if (image.type.startsWith('image/')) {
@@ -80,7 +80,7 @@ const Home: NextPage = () => {
             className={
               `text-6xl mt-12 bg-gradient-to-r
               from-red-500 via-violet-600 to-blue-500
-              bg-clip-text text-transparent`} 
+              bg-clip-text text-transparent`}
             >
               Shotlify
           </h1>
@@ -102,7 +102,7 @@ const Home: NextPage = () => {
                   naturalSlideWidth={360}
                   naturalSlideHeight={500}
                   totalSlides={videoSources.length}
-                > 
+                >
                   <Slider>
                     {videoSources.map((video, index) => {
                       return (
@@ -119,11 +119,11 @@ const Home: NextPage = () => {
                               controls
                             />
 
-                            <button 
+                            <button
                               className={
                                 `rounded border-0 text-md
                                 font-bold py-2 px-4
-                                text-white bg-gradient-to-br from-red-500 
+                                text-white bg-gradient-to-br from-red-500
                                 via-violet-600 to-blue-400 hover:bg-gradient-to-br
                                 hover:from-red-600 hover:via-violet-700 hover:to-blue-500
                                 self-end`
@@ -133,16 +133,16 @@ const Home: NextPage = () => {
                               Capture Image
                             </button>
 
-                            <button 
+                            <button
                               className={
-                                `bg-gradient-to-r from-red-500 via-violet-600 
+                                `bg-gradient-to-r from-red-500 via-violet-600
                                 to-blue-500 bg-clip-text text-transparent
                                 hover:from-red-600 hover:via-violet-700 hover:to-blue-600
                                 absolute top-4 right-4
                                 after:content-['X'] font-bold px-2`
                               }
                               aria-label="remove"
-                              onClick={() => removeVideo(index)} 
+                              onClick={() => removeVideo(index)}
                             />
                         </Slide>
                       )
@@ -154,13 +154,13 @@ const Home: NextPage = () => {
                       className={
                         `flex flex-wrap gap-2
                         mt-4 font-semibold justify-center
-                        bg-gradient-to-br from-red-500 via-violet-600 
+                        bg-gradient-to-br from-red-500 via-violet-600
                         to-blue-400 bg-clip-text text-transparent`
                       }
                       dotNumbers
                     /> : ''
                   }
-                </CarouselProvider> 
+                </CarouselProvider>
             </>
           : ''}
 
@@ -199,7 +199,7 @@ const Home: NextPage = () => {
                           <div className="relative">
                             <button
                               className={`
-                                bg-gradient-to-r from-red-500 via-violet-600 
+                                bg-gradient-to-r from-red-500 via-violet-600
                                 to-blue-500 hover:from-red-600 hover:via-violet-700
                                 hover:to-blue-600 font-bold py-2
                                 px-2 bg-clip-text text-transparent
@@ -229,7 +229,7 @@ const Home: NextPage = () => {
                       className={`
                         flex flex-wrap w-72 gap-2
                         mt-4 font-semibold justify-center
-                        bg-gradient-to-br from-red-500 via-violet-600 
+                        bg-gradient-to-br from-red-500 via-violet-600
                         to-blue-400 bg-clip-text text-transparent
                       `}
                       dotNumbers
