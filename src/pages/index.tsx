@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { type NextPage } from "next";
 import Head from "next/head";
-import VideoSection from "../common/VideoSection";
+import VideosSection from "../common/components/VideosSection";
+import ImagesSection from "../common/components/ImagesSection";
 import 'pure-react-carousel/dist/react-carousel.es.css';
+import HomeSection from "../common/components/HomeSection";
+
+type Stage = 'HOME' | 'VIDEOS' | 'IMAGES';
+
+const HOME = 'HOME',
+  VIDEOS = 'VIDEOS',
+  IMAGES = 'IMAGES';
 
 const Home: NextPage = () => {
   const [imageSources, setImageSources] = useState<(string)[]>([]);
   const [videoSources, setVideoSources] = useState<(string)[]>([]);
+  const [stage, setStage] = useState<Stage>(HOME);
 
   // Methods
   const captureImageFromVideo = (index: number) => {
@@ -91,14 +100,27 @@ const Home: NextPage = () => {
         </header>
 
         <main>
-          <VideoSection
-            videoSources={videoSources}
-            imageSources={imageSources}
-            onFilesChange={handleFilesChange}
-            onCaptureImageClick={captureImageFromVideo}
-            onRemoveImageClick={removeImage}
-            onRemoveVideoClick={removeVideo}
-          />
+          <div className={`bg-gradient-to-r
+              from-red-500 via-violet-600 to-blue-500
+              bg-clip-text text-transparent`}>
+            {stage === HOME
+              ? <HomeSection />: ''}
+
+            {stage === VIDEOS
+              ? <VideosSection
+                sources={videoSources}
+                onFilesChange={handleFilesChange}
+                onCaptureImageClick={captureImageFromVideo}
+                onRemoveVideoClick={removeVideo}
+              />: ''}
+
+            {stage === IMAGES
+              ? <ImagesSection
+              sources={imageSources}
+              onClick={removeImage}
+              onFilesChange={handleFilesChange}
+            />: ''}
+          </div>
         </main>
       </div>
     </>
