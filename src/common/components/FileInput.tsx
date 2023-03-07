@@ -19,7 +19,7 @@ const FileInput = ({ onFilesChange, accept, className }: FileInputProps) => {
       className={
         `file:rounded file:border-0 file:text-md
         file:font-bold file:py-2 file:px-4
-        file:text-white file:bg-gradient-to-br file:from-red-500 
+        file:text-gray-300 file:bg-gradient-to-br file:from-red-500 
         file:via-violet-600 file:to-blue-400 hover:file:bg-gradient-to-br
         hover:file:from-red-600 hover:file:via-violet-700 hover:file:to-blue-500
         active:file:ring-2 active:file:ring-violet-700 active:file:ring-inset

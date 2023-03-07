@@ -6,7 +6,7 @@ import ImagesSection from "../common/components/ImagesSection";
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import HomeSection from "../common/components/HomeSection";
 
-type Stage = 'HOME' | 'VIDEOS' | 'IMAGES';
+export type Stage = 'HOME' | 'VIDEOS' | 'IMAGES';
 
 const HOME = 'HOME',
   VIDEOS = 'VIDEOS',
@@ -102,9 +102,9 @@ const Home: NextPage = () => {
         <main>
           <div className={`bg-gradient-to-r
               from-red-500 via-violet-600 to-blue-500
-              bg-clip-text text-transparent`}>
+              bg-clip-text text-transparent mb-8`}>
             {stage === HOME
-              ? <HomeSection />: ''}
+              ? <HomeSection onStageChange={() => setStage(VIDEOS)} />: ''}
 
             {stage === VIDEOS
               ? <VideosSection
@@ -112,6 +112,8 @@ const Home: NextPage = () => {
                 onFilesChange={handleFilesChange}
                 onCaptureImageClick={captureImageFromVideo}
                 onRemoveVideoClick={removeVideo}
+                onStageChange={() => setStage(IMAGES)}
+                areImages={imageSources.length > 0}
               />: ''}
 
             {stage === IMAGES

@@ -6,3 +6,7 @@ body {
   height: 100vh;
   background-color: black;
 }
+
+main {
+  min-width: 196px;
+}
