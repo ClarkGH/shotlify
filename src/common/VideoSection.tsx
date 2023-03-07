@@ -1,5 +1,4 @@
 
-import Head from "next/head";
 import Image from "next/image";
 import FileInput from "../common/components/FileInput";
 
@@ -26,7 +25,7 @@ const VideoSection = ({
   onFilesChange
 }: VideoSectionProps): JSX.Element => {
   return (
-    <>
+    <div className="mb-8">
       {videoSources.length
         ? <>
           <h2 className={
@@ -197,7 +196,7 @@ const VideoSection = ({
             </CarouselProvider>
           </>
       : ''}
-    </>
+    </div>
   );
 };
 
