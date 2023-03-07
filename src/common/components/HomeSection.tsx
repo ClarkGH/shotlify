@@ -1,5 +1,5 @@
 type HomeSectionProps = {
-  onStageChange: () => void;
+  onStageChange?: () => void;
 }
 
 const HomeSection = ({onStageChange}: HomeSectionProps): JSX.Element => {
@@ -7,7 +7,7 @@ const HomeSection = ({onStageChange}: HomeSectionProps): JSX.Element => {
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl min-w-full">How it Works</h2>
 
-      <ol className="list-decimal list-inside">
+      <ol className="list-decimal list-inside text-xl">
         <li>Upload your videos.</li>
         <li>Take screenshots of your video(s) with Shotlify.</li>
         <li>Edit the images.</li>
