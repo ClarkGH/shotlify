@@ -26,7 +26,7 @@ const ImagesSection = ({
             <CarouselProvider
               className="w-80"
               naturalSlideWidth={300}
-              naturalSlideHeight={400}
+              naturalSlideHeight={300}
               totalSlides={sources.length}
             >
               <Slider>
