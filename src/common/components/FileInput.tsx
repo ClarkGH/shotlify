@@ -1,4 +1,4 @@
-import type {FC, ChangeEvent} from "react";
+import type {ChangeEvent} from "react";
 
 interface FileInputProps {
     onFilesChange: (selectedFiles: FileList) => void;
@@ -7,11 +7,7 @@ interface FileInputProps {
     className?: string;
 }
 
-const FileInput: FC<FileInputProps> = ({
-  onFilesChange,
-  accept,
-  className
-  }) => {
+const FileInput = ({ onFilesChange, accept, className }: FileInputProps) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
 
