@@ -100,11 +100,14 @@ const Home: NextPage = () => {
         </header>
 
         <main>
-          <div className={`bg-gradient-to-r
-              from-red-500 via-violet-600 to-blue-500
-              bg-clip-text text-transparent mb-8`}>
+          <div className={
+            `w-[438px] bg-gradient-to-r from-red-500
+            via-violet-600 to-blue-500 bg-clip-text
+            text-transparent mb-8`
+          }>
             {stage === HOME
-              ? <HomeSection onStageChange={() => setStage(VIDEOS)} />: ''}
+              ? <HomeSection onStageChange={() => setStage(VIDEOS)} />
+              : ''}
 
             {stage === VIDEOS
               ? <VideosSection
