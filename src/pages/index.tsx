@@ -97,6 +97,67 @@ const Home: NextPage = () => {
             >
               Shotlify
           </h1>
+
+          <nav className="flex gap-3">
+            <a
+              className={
+                `text-l bg-gradient-to-r
+                from-red-500 via-violet-600 to-blue-500
+                hover:bg-gradient-to-br hover:from-red-600
+                hover:via-violet-700 hover:to-blue-500
+                bg-clip-text text-transparent`
+              }
+              href=""
+              onClick={(evt) => {
+                evt.preventDefault();
+                setStage(HOME);
+              }}
+            >
+              Home
+            </a>
+
+            <div aria-hidden={true} className={
+              `text-l text-gray-300`
+            }>|</div>
+
+            <a
+              className={
+                `text-l bg-gradient-to-r
+                from-red-500 via-violet-600 to-blue-500
+                hover:bg-gradient-to-br hover:from-red-600
+                hover:via-violet-700 hover:to-blue-500
+                bg-clip-text text-transparent`
+              }
+              href=""
+              onClick={(evt) => {
+                evt.preventDefault();
+                setStage(VIDEOS);
+              }}
+            >
+              Videos
+            </a>
+
+            <div aria-hidden={true} className={
+              `text-l text-gray-300`
+            }>|</div>
+
+            <a
+              className={
+                `text-l bg-gradient-to-r
+                from-red-500 via-violet-600 to-blue-500
+                hover:bg-gradient-to-br hover:from-red-600
+                hover:via-violet-700 hover:to-blue-500
+                bg-clip-text text-transparent`
+              }
+              href=""
+              onClick={(evt) => {
+                evt.preventDefault();
+                setStage(IMAGES);
+              }}
+            >
+              Images
+            </a>
+          </nav>
         </header>
 
         <main>
