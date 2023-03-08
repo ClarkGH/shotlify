@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { type NextPage } from "next";
 import Head from "next/head";
-import VideoSection from "../common/VideoSection";
+import VideosSection from "../common/components/VideosSection";
+import ImagesSection from "../common/components/ImagesSection";
 import 'pure-react-carousel/dist/react-carousel.es.css';
+import HomeSection from "../common/components/HomeSection";
+
+export type Stage = 'HOME' | 'VIDEOS' | 'IMAGES';
+
+const HOME = 'HOME',
+  VIDEOS = 'VIDEOS',
+  IMAGES = 'IMAGES';
 
 const Home: NextPage = () => {
   const [imageSources, setImageSources] = useState<(string)[]>([]);
   const [videoSources, setVideoSources] = useState<(string)[]>([]);
+  const [stage, setStage] = useState<Stage>(HOME);
 
   // Methods
   const captureImageFromVideo = (index: number) => {
@@ -88,17 +97,96 @@ const Home: NextPage = () => {
             >
               Shotlify
           </h1>
+
+          <nav className="flex gap-3">
+            <a
+              className={
+                `text-l bg-gradient-to-r
+                from-red-500 via-violet-600 to-blue-500
+                hover:bg-gradient-to-br hover:from-red-600
+                hover:via-violet-700 hover:to-blue-500
+                bg-clip-text text-transparent`
+              }
+              href=""
+              onClick={(evt) => {
+                evt.preventDefault();
+                setStage(HOME);
+              }}
+            >
+              Home
+            </a>
+
+            <div aria-hidden={true} className={
+              `text-l text-gray-300`
+            }>|</div>
+
+            <a
+              className={
+                `text-l bg-gradient-to-r
+                from-red-500 via-violet-600 to-blue-500
+                hover:bg-gradient-to-br hover:from-red-600
+                hover:via-violet-700 hover:to-blue-500
+                bg-clip-text text-transparent`
+              }
+              href=""
+              onClick={(evt) => {
+                evt.preventDefault();
+                setStage(VIDEOS);
+              }}
+            >
+              Videos
+            </a>
+
+            <div aria-hidden={true} className={
+              `text-l text-gray-300`
+            }>|</div>
+
+            <a
+              className={
+                `text-l bg-gradient-to-r
+                from-red-500 via-violet-600 to-blue-500
+                hover:bg-gradient-to-br hover:from-red-600
+                hover:via-violet-700 hover:to-blue-500
+                bg-clip-text text-transparent`
+              }
+              href=""
+              onClick={(evt) => {
+                evt.preventDefault();
+                setStage(IMAGES);
+              }}
+            >
+              Images
+            </a>
+          </nav>
         </header>
 
         <main>
-          <VideoSection
-            videoSources={videoSources}
-            imageSources={imageSources}
-            onFilesChange={handleFilesChange}
-            onCaptureImageClick={captureImageFromVideo}
-            onRemoveImageClick={removeImage}
-            onRemoveVideoClick={removeVideo}
-          />
+          <div className={
+            `w-[438px] bg-gradient-to-r from-red-500
+            via-violet-600 to-blue-500 bg-clip-text
+            text-transparent mb-8`
+          }>
+            {stage === HOME
+              ? <HomeSection onStageChange={() => setStage(VIDEOS)} />
+              : ''}
+
+            {stage === VIDEOS
+              ? <VideosSection
+                sources={videoSources}
+                onFilesChange={handleFilesChange}
+                onCaptureImageClick={captureImageFromVideo}
+                onRemoveVideoClick={removeVideo}
+                onStageChange={() => setStage(IMAGES)}
+                areImages={imageSources.length > 0}
+              />: ''}
+
+            {stage === IMAGES
+              ? <ImagesSection
+              sources={imageSources}
+              onClick={removeImage}
+              onFilesChange={handleFilesChange}
+            />: ''}
+          </div>
         </main>
       </div>
     </>
