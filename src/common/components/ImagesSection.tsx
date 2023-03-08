@@ -19,7 +19,7 @@ const ImagesSection = ({
 }: ImagesSectionProps): JSX.Element => {
   return (
     <div className="flex flex-col gap-4">
-      <h2 className={`text-2xl`}>Images</h2>
+      <h2 className={`text-2xl font-semibold`}>Images</h2>
 
       {sources.length
         ? <>

@@ -80,8 +80,13 @@ const Home: NextPage = () => {
 
         <meta
           name="description"
-          // eslint-disable-next-line max-len
-          content="Capture images from your videos, and create a slideshow."
+          content={
+            `Shotlify, the all-in-one solution for creating
+            stunning slideshows from your video content! With Shotlify,
+            you can easily upload your videos, capture high-quality
+            screenshots, and create engaging slideshows that will
+            captivate your audience.`
+          }
         />
 
         <link rel="icon" href="/favicon.ico" />
@@ -105,7 +110,7 @@ const Home: NextPage = () => {
                 from-red-500 via-violet-600 to-blue-500
                 hover:bg-gradient-to-br hover:from-red-600
                 hover:via-violet-700 hover:to-blue-500
-                bg-clip-text text-transparent`
+                bg-clip-text text-transparent font-semibold`
               }
               href=""
               onClick={(evt) => {
@@ -126,7 +131,7 @@ const Home: NextPage = () => {
                 from-red-500 via-violet-600 to-blue-500
                 hover:bg-gradient-to-br hover:from-red-600
                 hover:via-violet-700 hover:to-blue-500
-                bg-clip-text text-transparent`
+                bg-clip-text text-transparent font-semibold`
               }
               href=""
               onClick={(evt) => {
@@ -147,7 +152,7 @@ const Home: NextPage = () => {
                 from-red-500 via-violet-600 to-blue-500
                 hover:bg-gradient-to-br hover:from-red-600
                 hover:via-violet-700 hover:to-blue-500
-                bg-clip-text text-transparent`
+                bg-clip-text text-transparent font-semibold`
               }
               href=""
               onClick={(evt) => {
