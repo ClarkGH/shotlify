@@ -167,7 +167,7 @@ const Home: NextPage = () => {
 
         <main>
           <div className={
-            `w-[438px] bg-gradient-to-r from-red-500
+            `bg-gradient-to-r from-red-500
             via-violet-600 to-blue-500 bg-clip-text
             text-transparent mb-8`
           }>
