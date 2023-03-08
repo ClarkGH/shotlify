@@ -5,9 +5,9 @@ type HomeSectionProps = {
 const HomeSection = ({onStageChange}: HomeSectionProps): JSX.Element => {
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-2xl">Welcome to Shotlify!</h2>
+      <h2 className="text-2xl">Welcome</h2>
 
-      <p className="text-xl text-gray-300" aria-label="paragraph">
+      <p className="text-xl text-gray-300 px-2" aria-label="paragraph">
         The all-in-one solution for creating
         stunning slideshows from your video content! With Shotlify,
         you can easily upload your videos, capture high-quality
