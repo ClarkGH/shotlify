@@ -30,7 +30,7 @@ const VideosSection = ({
       {sources.length
         ? <>
           <CarouselProvider
-              className="mb-4 max-h-{500} w-80"
+              className="mb-4 max-h-{500} w-80 self-center"
               naturalSlideWidth={360}
               naturalSlideHeight={500}
               totalSlides={sources.length}
@@ -105,6 +105,12 @@ const VideosSection = ({
         </>
       : ''}
 
+      <FileInput
+        className="mt-4"
+        accept={ACCEPTED_FILE_TYPES}
+        onFilesChange={onFilesChange}
+      />
+
       {areImages
         ? <button
           className={
@@ -119,12 +125,6 @@ const VideosSection = ({
         >
           Preview Images
       </button>: ''}
-
-      <FileInput
-        className="mt-4"
-        accept={ACCEPTED_FILE_TYPES}
-        onFilesChange={onFilesChange}
-      />
     </div>
   );
 };

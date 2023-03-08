@@ -24,7 +24,7 @@ const ImagesSection = ({
       {sources.length
         ? <>
             <CarouselProvider
-              className="w-80"
+              className="w-80 self-center"
               naturalSlideWidth={300}
               naturalSlideHeight={300}
               totalSlides={sources.length}
@@ -90,6 +90,12 @@ const ImagesSection = ({
           </>
       : ''}
 
+      <FileInput
+        className="mt-4"
+        accept={ACCEPTED_FILE_TYPES}
+        onFilesChange={onFilesChange}
+      />
+
       {sources.length ? <button
           className={
             `rounded border-0 text-md
@@ -103,12 +109,6 @@ const ImagesSection = ({
         >
           Create Slideshow
       </button>: ''}
-
-      <FileInput
-        className="mt-4"
-        accept={ACCEPTED_FILE_TYPES}
-        onFilesChange={onFilesChange}
-      />
     </div>
   );
 };
