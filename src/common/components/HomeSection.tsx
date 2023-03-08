@@ -5,7 +5,7 @@ type HomeSectionProps = {
 const HomeSection = ({onStageChange}: HomeSectionProps): JSX.Element => {
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-2xl">Welcome</h2>
+      <h2 className="text-2xl font-semibold">Welcome</h2>
 
       <p className="text-xl text-gray-300 px-2" aria-label="paragraph">
         The all-in-one solution for creating
