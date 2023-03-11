@@ -8,7 +8,7 @@ const HomeSection = ({onStageChange}: HomeSectionProps): JSX.Element => {
       <h2 className="text-2xl font-semibold">Welcome</h2>
 
       <p
-        className="text-xl text-gray-300 px-2 max-w-[302px]"
+        className="text-xl text-gray-300 px-2 max-[375px]:max-w-[302px]"
         aria-label="paragraph"
       >
         Shotlify, the all-in-one solution for creating

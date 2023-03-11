@@ -93,7 +93,7 @@ const Home: NextPage = () => {
       </Head>
 
       <div className="flex min-h-screen flex-col items-center">
-        <header className="mb-8">
+        <header className="mb-8 flex flex-col items-center">
           <h1
             className={
               `text-6xl mt-12 bg-gradient-to-r
@@ -169,7 +169,7 @@ const Home: NextPage = () => {
           <div className={
             `bg-gradient-to-r from-red-500
             via-violet-600 to-blue-500 bg-clip-text
-            text-transparent mb-8`
+            text-transparent mb-8 w-80`
           }>
             {stage === HOME
               ? <HomeSection onStageChange={() => setStage(VIDEOS)} />
