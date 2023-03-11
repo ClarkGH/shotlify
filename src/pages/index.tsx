@@ -64,12 +64,12 @@ const Home: NextPage = () => {
     }
   };
 
-  const handleVideoFileChange = (selectedImages: FileList) => {
-    if (selectedImages) {
-      Array.from(selectedImages).forEach((image: File) => {
+  const handleVideoFileChange = (selectedVideos: FileList) => {
+    if (selectedVideos) {
+      Array.from(selectedVideos).forEach((video: File) => {
         const reader = new FileReader();
 
-        reader.readAsDataURL(image);
+        reader.readAsDataURL(video);
 
         reader.onload = () => {
           setVideoSources((prevVideoSources) => {
