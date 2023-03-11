@@ -19,7 +19,6 @@ This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3
 Main libs:
 - [Next.js](https://nextjs.org)
 - [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
 - [Pure React Carousel](https://github.com/express-labs/pure-react-carousel)
 
 ## Licensing and Legalese
