@@ -48,26 +48,34 @@ const Home: NextPage = () => {
     });
   };
 
-  const handleFilesChange = (selectedImages: FileList) => {
+  const handleImageFilesChange = (selectedImages: FileList) => {
     if (selectedImages) {
       Array.from(selectedImages).forEach((image: File) => {
         const reader = new FileReader();
 
         reader.readAsDataURL(image);
 
-        if (image.type.startsWith('image/')) {
-          reader.onload = () => {
-            setImageSources((prevImageSources) => {
-              return [...prevImageSources, reader.result as string];
-            });
-          };
-        } else {
-          reader.onload = () => {
-            setVideoSources((prevVideoSources) => {
-              return [...prevVideoSources, reader.result as string];
-            });
-          };
-        }
+        reader.onload = () => {
+          setImageSources((prevImageSources) => {
+            return [...prevImageSources, reader.result as string];
+          });
+        };
+      });
+    }
+  };
+
+  const handleVideoFileChange = (selectedVideos: FileList) => {
+    if (selectedVideos) {
+      Array.from(selectedVideos).forEach((video: File) => {
+        const reader = new FileReader();
+
+        reader.readAsDataURL(video);
+
+        reader.onload = () => {
+          setVideoSources((prevVideoSources) => {
+            return [...prevVideoSources, reader.result as string];
+          });
+        };
       });
     }
   };
@@ -178,7 +186,7 @@ const Home: NextPage = () => {
             {stage === VIDEOS
               ? <VideosSection
                 sources={videoSources}
-                onFilesChange={handleFilesChange}
+                onFilesChange={handleVideoFileChange}
                 onCaptureImageClick={captureImageFromVideo}
                 onRemoveVideoClick={removeVideo}
                 onStageChange={() => setStage(IMAGES)}
@@ -189,7 +197,7 @@ const Home: NextPage = () => {
               ? <ImagesSection
               sources={imageSources}
               onClick={removeImage}
-              onFilesChange={handleFilesChange}
+              onFilesChange={handleImageFilesChange}
             />: ''}
           </div>
         </main>
