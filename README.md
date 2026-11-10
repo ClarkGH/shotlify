@@ -1,5 +1,6 @@
 # Shotlify
-Currently running on https://slideshow-sigma.vercel.app/
+No longer in production
+~~Currently running on https://slideshow-sigma.vercel.app/~~
 
 1. Upload a single or multiple videos.
 2. Take screenshots, or upload your own images. 
