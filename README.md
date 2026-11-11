@@ -1,9 +1,11 @@
 # Shotlify
-Currently running on https://slideshow-sigma.vercel.app/
+Convert screenshots snapped from a video into a video slideshow with music and transitions. Useful for wedding videos, without having to pay AI or a human to manually make one for you.
+
+Half-way running on https://slideshow-sigma.vercel.app/
 
 1. Upload a single or multiple videos.
 2. Take screenshots, or upload your own images. 
-3. (Coming soon...ish) Get a slideshow back from the images/screenshots.
+3. Get a slideshow back from the images/screenshots. You'll need `node_images_to_slideshow` or a similar service hooked into this one or the slideshow compilation won't start/complete.
 
 ## To Run
 
