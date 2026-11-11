@@ -23,6 +23,12 @@ Main libs:
 - [Tailwind CSS](https://tailwindcss.com)
 - [Pure React Carousel](https://github.com/express-labs/pure-react-carousel)
 
+## Purpose
+
+To get my hands dirtier with services work and to not pigeon-hole myself into front-end work. Tailwind was used as a short-cut to avoid overthinking the css.
+
+Due to the use of monospace font and the use of tailwind, this may look, "vibe-coded". I assure you, it is not. Following the project's history this was built in 2023 before AI was "useful". The commit history should show you how I blundered through getting this to work, if you're curious/technical.
+
 ## Licensing and Legalese
 ffMPEG falls under under the public GPL 2.0 license. 
 
