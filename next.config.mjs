@@ -14,5 +14,10 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  /* Images are the user's own data and blob URLs, so the optimizer has
+   * nothing to do. Turning it off makes /_next/image return 404. */
+  images: {
+    unoptimized: true,
+  },
 };
 export default config;

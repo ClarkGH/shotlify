@@ -2,6 +2,10 @@
   "name": "shotlify",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": "26.x"
+  },
   "scripts": {
     "build": "next build",
     "dev": "next dev",
