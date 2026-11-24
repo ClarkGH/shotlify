@@ -7,8 +7,8 @@
     "node": "26.x"
   },
   "scripts": {
-    "build": "next build",
-    "dev": "next dev",
+    "build": "next build --webpack",
+    "dev": "next dev --webpack",
     "lint": "eslint .",
     "start": "next start"
   },
