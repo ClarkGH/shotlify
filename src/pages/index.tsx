@@ -115,9 +115,9 @@ const Home: NextPage = () => {
             <a
               className={
                 `text-l bg-gradient-to-r
-                from-red-500 via-violet-600 to-blue-500
-                hover:bg-gradient-to-br hover:from-red-600
-                hover:via-violet-700 hover:to-blue-500
+                from-red-400 via-violet-400 to-blue-400
+                hover:bg-gradient-to-br hover:from-red-300
+                hover:via-violet-300 hover:to-blue-300
                 bg-clip-text text-transparent font-semibold`
               }
               href=""
@@ -136,9 +136,9 @@ const Home: NextPage = () => {
             <a
               className={
                 `text-l bg-gradient-to-r
-                from-red-500 via-violet-600 to-blue-500
-                hover:bg-gradient-to-br hover:from-red-600
-                hover:via-violet-700 hover:to-blue-500
+                from-red-400 via-violet-400 to-blue-400
+                hover:bg-gradient-to-br hover:from-red-300
+                hover:via-violet-300 hover:to-blue-300
                 bg-clip-text text-transparent font-semibold`
               }
               href=""
@@ -157,9 +157,9 @@ const Home: NextPage = () => {
             <a
               className={
                 `text-l bg-gradient-to-r
-                from-red-500 via-violet-600 to-blue-500
-                hover:bg-gradient-to-br hover:from-red-600
-                hover:via-violet-700 hover:to-blue-500
+                from-red-400 via-violet-400 to-blue-400
+                hover:bg-gradient-to-br hover:from-red-300
+                hover:via-violet-300 hover:to-blue-300
                 bg-clip-text text-transparent font-semibold`
               }
               href=""

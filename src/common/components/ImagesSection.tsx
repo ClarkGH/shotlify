@@ -34,7 +34,7 @@ const ImagesSection = ({
                   return (
                     <Slide
                       innerClassName={
-                        `grid grid-col-1 justify-items-center items-start`
+                        `grid grid-cols-1 justify-items-center items-start`
                       }
                       key={`slide-${index}`}
                       index={index}
@@ -42,23 +42,18 @@ const ImagesSection = ({
                       <div className="relative">
                         <div
                           className={
-                            `bg-gray-300 hover:bg-gray-400 absolute
+                            `bg-gray-100 hover:bg-white absolute
                             top-6 right-2 rounded-md`
                           }
                         >
                           <button
                             className={
-                              `bg-gradient-to-r from-red-500 via-violet-600
-                              to-blue-500 bg-clip-text text-transparent
-                              hover:from-red-600 hover:via-violet-700
-                              hover:to-blue-600 after:content-['X']
+                              `text-gray-900 after:content-['X']
                               font-bold px-2`
                             }
-                            aria-label="remove"
+                            aria-label={`Remove image ${index + 1}`}
                             onClick={() => onClick(index)}
-                          >
-                            <span className="sr-only">Remove image</span>
-                          </button>
+                          />
                         </div>
 
                         <Image
@@ -80,7 +75,7 @@ const ImagesSection = ({
                   className={`
                     flex flex-wrap w-72 gap-2
                     mt-4 font-semibold justify-center
-                    bg-gradient-to-br from-red-500 via-violet-600
+                    bg-gradient-to-br from-red-400 via-violet-400
                     to-blue-400 bg-clip-text text-transparent
                   `}
                   dotNumbers
@@ -92,6 +87,7 @@ const ImagesSection = ({
 
       <FileInput
         className="mt-4"
+        label="Add images"
         accept={ACCEPTED_FILE_TYPES}
         onFilesChange={onFilesChange}
       />
@@ -100,10 +96,10 @@ const ImagesSection = ({
           className={
             `rounded border-0 text-md
             font-bold py-2 px-4
-            text-gray-300 bg-gradient-to-br from-red-500
-            via-violet-600 to-blue-400
-            hover:bg-gradient-to-br hover:from-red-600
-            hover:via-violet-700 hover:to-blue-500`
+            text-white bg-gradient-to-br from-red-700
+            via-violet-700 to-blue-700
+            hover:bg-gradient-to-br hover:from-red-800
+            hover:via-violet-800 hover:to-blue-800`
           }
           onClick={() => console.log('boop')}
         >

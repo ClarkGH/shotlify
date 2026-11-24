@@ -30,7 +30,7 @@ const VideosSection = ({
       {sources.length
         ? <>
           <CarouselProvider
-              className="mb-4 max-h-{500} w-80 self-center"
+              className="mb-4 w-80 self-center"
               naturalSlideWidth={360}
               naturalSlideHeight={500}
               totalSlides={sources.length}
@@ -57,10 +57,10 @@ const VideosSection = ({
                           className={
                             `rounded border-0 text-md
                             font-bold py-2 px-4
-                            text-gray-300 bg-gradient-to-br from-red-500
-                            via-violet-600 to-blue-400
-                            hover:bg-gradient-to-br hover:from-red-600
-                            hover:via-violet-700 hover:to-blue-500 self-end`
+                            text-white bg-gradient-to-br from-red-700
+                            via-violet-700 to-blue-700
+                            hover:bg-gradient-to-br hover:from-red-800
+                            hover:via-violet-800 hover:to-blue-800 self-end`
                           }
                           onClick={() => onCaptureImageClick(index)}
                         >
@@ -68,22 +68,17 @@ const VideosSection = ({
                         </button>
 
                         <div className={
-                          `bg-gray-300 hover:bg-gray-400 absolute
+                          `bg-gray-100 hover:bg-white absolute
                           top-2 right-2 rounded-md`
                         }>
                           <button
                             className={
-                              `bg-gradient-to-r from-red-500 via-violet-600
-                              to-blue-500 bg-clip-text text-transparent
-                              hover:from-red-600 hover:via-violet-700
-                              hover:to-blue-600 after:content-['X']
+                              `text-gray-900 after:content-['X']
                               font-bold px-2`
                             }
-                            aria-label="remove"
+                            aria-label={`Remove video ${index + 1}`}
                             onClick={() => onRemoveVideoClick(index)}
-                          >
-                            <span className="sr-only">Remove video</span>
-                          </button>
+                          />
                         </div>
                     </Slide>
                   );
@@ -95,7 +90,7 @@ const VideosSection = ({
                   className={
                     `flex flex-wrap gap-2
                     mt-4 font-semibold justify-center
-                    bg-gradient-to-br from-red-500 via-violet-600
+                    bg-gradient-to-br from-red-400 via-violet-400
                     to-blue-400 bg-clip-text text-transparent`
                   }
                   dotNumbers
@@ -107,6 +102,7 @@ const VideosSection = ({
 
       <FileInput
         className="mt-4"
+        label="Add videos"
         accept={ACCEPTED_FILE_TYPES}
         onFilesChange={onFilesChange}
       />
@@ -116,10 +112,10 @@ const VideosSection = ({
           className={
             `rounded border-0 text-md
             font-bold py-2 px-4
-            text-gray-300 bg-gradient-to-br from-red-500
-            via-violet-600 to-blue-400
-            hover:bg-gradient-to-br hover:from-red-600
-            hover:via-violet-700 hover:to-blue-500`
+            text-white bg-gradient-to-br from-red-700
+            via-violet-700 to-blue-700
+            hover:bg-gradient-to-br hover:from-red-800
+            hover:via-violet-800 hover:to-blue-800`
           }
           onClick={onStageChange}
         >
