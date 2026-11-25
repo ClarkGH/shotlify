@@ -2,7 +2,7 @@
 
 Portfolio project. Clark is the quality bottleneck on purpose: every line must be understood by him, so optimize for reviewability, not speed. When in doubt, ask.
 
-Shotlify is the frontend (Next.js pages router, tRPC, Tailwind, on Vercel). Rendering happens in a separate repo, `node_images_to_slideshow`, which has its own CLAUDE.md.
+Shotlify is the frontend (Next.js pages router, Tailwind, on Vercel). It talks to the render API directly from the browser; there's no backend of its own. The leftover tRPC scaffold is unused and slated for removal. Rendering happens in a separate repo, `node_images_to_slideshow`, which has its own CLAUDE.md.
 
 ## Where things live
 
