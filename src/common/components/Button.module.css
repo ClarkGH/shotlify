@@ -1,0 +1,166 @@
+/* The design canvas button. Rest: raised 2px. Lifted (hover on pointer
+ * devices, or keyboard focus): raised 6px and a gradient rim turns three
+ * times, about 4.8s, then rests (under WCAG 2.2.2's 5s). Pressed: flat.
+ * Reduced motion keeps the lift (it's the state change) but makes it
+ * instant and stops the rim turning. Forced colors drops all decoration. */
+
+@property --spin {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+
+@keyframes spin {
+  to {
+    --spin: 360deg;
+  }
+}
+
+.button {
+  --face: #1e2422;
+  --ink: #ffffff;
+  --rim: #1e2422;
+  --side: #0b0e0d;
+  --ring: #1e2422;
+  --rest: 1px 1px 0 var(--side), 2px 2px 0 var(--side);
+  --lifted: 1px 1px 0 var(--side), 2px 2px 0 var(--side),
+    3px 3px 0 var(--side), 4px 4px 0 var(--side), 5px 5px 0 var(--side),
+    6px 6px 0 var(--side);
+  --spinning-rim: conic-gradient(
+    from var(--spin),
+    #ef4444,
+    #7c3aed,
+    #3b82f6,
+    #ef4444
+  );
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 22px;
+  font-family: var(--font-spectral), Georgia, serif;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  border: 3px solid transparent;
+  border-radius: 12px;
+  background:
+    linear-gradient(var(--face), var(--face)) padding-box,
+    linear-gradient(var(--rim), var(--rim)) border-box;
+  transform: translate(-2px, -2px);
+  box-shadow: var(--rest);
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.9, 0.25, 1.25),
+    box-shadow 180ms cubic-bezier(0.2, 0.9, 0.25, 1.25);
+  cursor: pointer;
+}
+
+.button[data-variant="secondary"] {
+  --face: #f1f4f3;
+  --ink: #1e2422;
+  --rim: #1e2422;
+  --side: #1e2422;
+}
+
+.button[data-variant="onDark"] {
+  --face: #f1f4f3;
+  --ink: #1e2422;
+  --rim: #f1f4f3;
+  --side: #8e9894;
+  --ring: #ffffff;
+}
+
+.button[data-size="small"] {
+  min-height: 44px;
+  padding: 0 14px;
+  font-size: 15px;
+}
+
+/* :has() covers FilePicker: the <label> carries this class and the hidden
+ * file input inside it takes the keyboard focus. :focus-visible, not
+ * :focus-within, so a mouse pick doesn't leave the label lifted. */
+.button:focus-visible,
+.button:has(:focus-visible) {
+  transform: translate(-6px, -6px);
+  box-shadow: var(--lifted);
+  background:
+    linear-gradient(var(--face), var(--face)) padding-box,
+    var(--spinning-rim) border-box;
+  animation: spin 1.6s linear 3;
+  outline: 3px solid var(--ring);
+  outline-offset: 6px;
+}
+
+/* Touch screens fire :hover on tap and leave it stuck, so lift on hover
+ * only where a real pointer can hover. */
+@media (hover: hover) {
+  .button:hover {
+    transform: translate(-6px, -6px);
+    box-shadow: var(--lifted);
+    background:
+      linear-gradient(var(--face), var(--face)) padding-box,
+      var(--spinning-rim) border-box;
+    animation: spin 1.6s linear 3;
+  }
+}
+
+.button:active {
+  transform: translate(0, 0);
+  box-shadow: none;
+  transition-duration: 60ms;
+}
+
+/* Blocked: still focusable (so its reason can be read), but no lift, no
+ * rim, no press. Focus stays visible. */
+.button[aria-disabled="true"],
+.button[aria-disabled="true"]:hover,
+.button[aria-disabled="true"]:active,
+.button[aria-disabled="true"]:focus-visible {
+  --face: #f1f4f3;
+  --ink: #56615e;
+  --rim: #56615e;
+  transform: none;
+  animation: none;
+  box-shadow: none;
+  background:
+    linear-gradient(var(--face), var(--face)) padding-box,
+    linear-gradient(var(--rim), var(--rim)) border-box;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+
+  .button:hover,
+  .button:focus-visible,
+  .button:has(:focus-visible) {
+    animation: none;
+    --spin: 40deg;
+  }
+}
+
+@media (forced-colors: active) {
+  .button,
+  .button:hover,
+  .button:focus-visible,
+  .button:has(:focus-visible),
+  .button:active {
+    background: ButtonFace;
+    color: ButtonText;
+    border-color: ButtonText;
+    box-shadow: none;
+    transform: none;
+    animation: none;
+  }
+
+  .button[aria-disabled="true"] {
+    color: GrayText;
+    border-color: GrayText;
+  }
+}

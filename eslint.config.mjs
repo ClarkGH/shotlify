@@ -33,5 +33,12 @@ export default defineConfig([
       semi: ["error", "always"],
     },
   },
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+    // Local, gitignored notes and scratch scripts: never part of the build.
+    ".claude/**",
+  ]),
 ]);

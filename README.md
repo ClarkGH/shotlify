@@ -10,7 +10,7 @@ Half-way running on https://slideshow-sigma.vercel.app/
 ## To Run
 
 - Clone the repository.
-- Run `$ yarn && yarn dev`
+- Run `$ pnpm install && pnpm dev`
 - Visit http://localhost:3000
 - Have fun
 
@@ -21,7 +21,6 @@ This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3
 Main libs:
 - [Next.js](https://nextjs.org)
 - [Tailwind CSS](https://tailwindcss.com)
-- [Pure React Carousel](https://github.com/express-labs/pure-react-carousel)
 
 ## Purpose
 
