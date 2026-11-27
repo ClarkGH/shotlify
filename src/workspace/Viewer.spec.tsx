@@ -4,8 +4,13 @@ import { type ReactElement } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AnnounceProvider, REANNOUNCE_DELAY_MS } from "./announce";
+import { encodeJpeg } from "./encode";
 import { type Video } from "./types";
-import Viewer, { VIEWER_COPY_DRAFT } from "./Viewer";
+import Viewer, { VIEWER_COPY } from "./Viewer";
+
+/* Encoding has its own spec (encode.spec.ts); here it only has to hand
+ * back a blob or fail. */
+vi.mock("./encode", () => ({ encodeJpeg: vi.fn() }));
 
 const video = (id: string): Video => ({
   id,
@@ -34,19 +39,8 @@ const loadFrame = (width = 640, height = 360) => {
   fireEvent.loadedData(element);
 };
 
-/* jsdom has no canvas drawing: stand in a 2D context. */
-const stubCanvas = (dataUrl = "data:image/png;base64,CAPTURED") => {
-  const drawImage = vi.fn();
-  vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(
-    function (this: HTMLCanvasElement) {
-      return { canvas: this, drawImage } as unknown as RenderingContext;
-    },
-  );
-  const toDataURL = vi
-    .spyOn(HTMLCanvasElement.prototype, "toDataURL")
-    .mockReturnValue(dataUrl);
-  return { drawImage, toDataURL };
-};
+/* Lets the capture's promise finish (microtasks, not timers). */
+const settle = () => act(() => Promise.resolve());
 
 /* The message also lives in the button's screen-reader description and in
  * the live region (both on purpose); this finds the one on screen. */
@@ -102,40 +96,78 @@ describe("Viewer", () => {
     expect(captureButton().getAttribute("aria-disabled")).toBeNull();
   });
 
-  it("captures the current frame at full size as a PNG", () => {
-    const { drawImage, toDataURL } = stubCanvas();
-    const onCapture = vi.fn();
-    renderWithAnnouncer(<Viewer video={video("a")} onCapture={onCapture} />);
-    loadFrame(1920, 1080);
+  it("encodes the current frame at its full size and hands it up",
+    async () => {
+      const jpeg = new Blob(["jpeg"], { type: "image/jpeg" });
+      vi.mocked(encodeJpeg).mockResolvedValueOnce(jpeg);
+      const onCapture = vi.fn();
+      renderWithAnnouncer(
+        <Viewer video={video("a")} onCapture={onCapture} />,
+      );
+      loadFrame(1920, 1080);
 
-    fireEvent.click(captureButton());
+      fireEvent.click(captureButton());
+      await settle();
 
-    expect(drawImage).toHaveBeenCalledWith(videoElement(), 0, 0, 1920, 1080);
-    expect(toDataURL).toHaveBeenCalledWith("image/png");
-    expect(onCapture).toHaveBeenCalledWith("data:image/png;base64,CAPTURED");
-  });
+      expect(encodeJpeg).toHaveBeenCalledWith(videoElement(), 1920, 1080);
+      expect(onCapture).toHaveBeenCalledWith(jpeg, {
+        kind: "capture",
+        videoName: "a.webm",
+        time: 0,
+      });
+    });
 
-  it("says so, instead of failing silently, when there's no canvas", () => {
-    vi.spyOn(HTMLCanvasElement.prototype, "getContext")
-      .mockReturnValue(null);
+  it("labels the capture with the moment Capture was pressed", async () => {
+    let finish: (blob: Blob) => void = () => undefined;
+    vi.mocked(encodeJpeg).mockReturnValueOnce(
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+    );
     const onCapture = vi.fn();
     renderWithAnnouncer(<Viewer video={video("a")} onCapture={onCapture} />);
     loadFrame();
+    let now = 12;
+    Object.defineProperty(videoElement(), "currentTime", {
+      get: () => now,
+      configurable: true,
+    });
 
     fireEvent.click(captureButton());
+    now = 30; // the video plays on while the JPEG encodes
+    finish(new Blob(["jpeg"]));
+    await settle();
 
-    expect(onCapture).not.toHaveBeenCalled();
-    expect(spoken()).toBe(VIEWER_COPY_DRAFT.captureFailed);
+    expect(onCapture).toHaveBeenCalledWith(
+      expect.any(Blob),
+      expect.objectContaining({ time: 12 }),
+    );
   });
+
+  it("says so, instead of failing silently, when encoding fails",
+    async () => {
+      vi.mocked(encodeJpeg).mockRejectedValueOnce(new Error("no context"));
+      const onCapture = vi.fn();
+      renderWithAnnouncer(
+        <Viewer video={video("a")} onCapture={onCapture} />,
+      );
+      loadFrame();
+
+      fireEvent.click(captureButton());
+      await settle();
+
+      expect(onCapture).not.toHaveBeenCalled();
+      expect(spoken()).toBe(VIEWER_COPY.captureFailed);
+    });
 
   it("explains and blocks capture when the video can't play", () => {
     renderWithAnnouncer(<Viewer video={video("a")} onCapture={vi.fn()} />);
 
     fireEvent.error(videoElement());
 
-    expect(visibleMessage(VIEWER_COPY_DRAFT.cantPlay)).toBeTruthy();
+    expect(visibleMessage(VIEWER_COPY.cantPlay)).toBeTruthy();
     expect(captureButton().getAttribute("aria-disabled")).toBe("true");
-    expect(spoken()).toBe(VIEWER_COPY_DRAFT.cantPlay);
+    expect(spoken()).toBe(VIEWER_COPY.cantPlay);
   });
 
   it("treats a file with no picture (width 0) as unplayable", () => {
@@ -144,7 +176,7 @@ describe("Viewer", () => {
     loadFrame(0, 0);
 
     expect(captureButton().getAttribute("aria-disabled")).toBe("true");
-    expect(visibleMessage(VIEWER_COPY_DRAFT.cantPlay)).toBeTruthy();
+    expect(visibleMessage(VIEWER_COPY.cantPlay)).toBeTruthy();
   });
 
   it("starts fresh when the video changes", () => {
@@ -159,7 +191,7 @@ describe("Viewer", () => {
       </AnnounceProvider>,
     );
 
-    expect(visibleMessage(VIEWER_COPY_DRAFT.cantPlay)).toBeUndefined();
+    expect(visibleMessage(VIEWER_COPY.cantPlay)).toBeUndefined();
     expect(videoElement().getAttribute("src"))
       .toBe("data:video/webm;base64,b");
   });

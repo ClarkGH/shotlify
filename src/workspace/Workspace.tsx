@@ -53,6 +53,7 @@ const Workspace = (): JSX.Element => {
 
           <FrameStrip
             frames={workspace.frames}
+            onMove={workspace.moveFrame}
             onRemove={workspace.removeFrame}
             onAddPhotos={workspace.addPhotos}
           />

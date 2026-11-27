@@ -2,8 +2,9 @@ import { useRef, useState } from "react";
 
 import Button from "../common/components/Button";
 import { useAnnounce } from "./announce";
+import { encodeJpeg } from "./encode";
 import { formatTime } from "./time";
-import { type Video } from "./types";
+import { type CaptureSource, type Video } from "./types";
 
 /* Shows the selected video and the "Capture this frame" button. Holds its
  * own <video> ref; nothing queries the DOM for it. */
@@ -11,15 +12,15 @@ export type ViewerProps = {
   /* null shows the empty state: "Add a video, pause on a moment you like,
    * and capture it." */
   video: Video | null;
-  /* The captured image as a data: URL. The page turns it into a Frame. */
-  onCapture: (src: string) => void;
+  /* The captured JPEG and where it came from. The page turns them into a
+   * Frame. */
+  onCapture: (blob: Blob, source: CaptureSource) => void;
 };
 
-/* DRAFT copy, not Clark's yet: replace with his wording. Kept in one
- * place so it's easy to find and swap. */
-export const VIEWER_COPY_DRAFT = {
+/* Clark's copy (review 2026-11-26), kept in one place. */
+export const VIEWER_COPY = {
   loading: "Video still loading",
-  cantPlay: "This video can't play in your browser. Try an MP4.",
+  cantPlay: "This video won't play here. MP4 files work best.",
   captureFailed: "Couldn't capture this frame.",
 } as const;
 
@@ -32,7 +33,7 @@ const Player = ({
   onCapture,
 }: {
   video: Video;
-  onCapture: (src: string) => void;
+  onCapture: ViewerProps["onCapture"];
 }): JSX.Element => {
   const { announce } = useAnnounce();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -51,33 +52,37 @@ const Player = ({
 
   const handleError = () => {
     setStatus("error");
-    announce(VIEWER_COPY_DRAFT.cantPlay);
+    announce(VIEWER_COPY.cantPlay);
   };
 
-  /* Draws the current frame at the video's full size and hands it up as a
-   * PNG. Slice 4 adds downscaling (a 4K frame is a very large data: URL)
-   * and moves to blob: URLs. */
+  /* Hands up the current frame as a downsized JPEG (encodeJpeg). Any
+   * failure, from a missing picture to the browser refusing to encode,
+   * gets the same message: the user can only try again. */
   const capture = () => {
     const element = videoRef.current;
-    const context = document.createElement("canvas").getContext("2d");
-
-    if (!element || element.videoWidth === 0 || !context) {
-      announce(VIEWER_COPY_DRAFT.captureFailed);
+    if (!element || element.videoWidth === 0) {
+      announce(VIEWER_COPY.captureFailed);
       return;
     }
 
-    const { canvas } = context;
-    canvas.width = element.videoWidth;
-    canvas.height = element.videoHeight;
-    context.drawImage(element, 0, 0, canvas.width, canvas.height);
-    onCapture(canvas.toDataURL("image/png"));
+    // Read now, not after the encode: the video may have moved on or
+    // been switched by then. encodeJpeg draws the picture right away too.
+    const source: CaptureSource = {
+      kind: "capture",
+      videoName: video.name,
+      time: element.currentTime,
+    };
+
+    encodeJpeg(element, element.videoWidth, element.videoHeight)
+      .then((blob) => onCapture(blob, source))
+      .catch(() => announce(VIEWER_COPY.captureFailed));
   };
 
   const disabledReason = status === "ready"
     ? undefined
     : status === "loading"
-      ? VIEWER_COPY_DRAFT.loading
-      : VIEWER_COPY_DRAFT.cantPlay;
+      ? VIEWER_COPY.loading
+      : VIEWER_COPY.cantPlay;
 
   return (
     <>
@@ -96,7 +101,7 @@ const Player = ({
         onSeeked={syncTime}
       />
       {status === "error" && (
-        <p className="m-0 text-[#f1f4f3]">{VIEWER_COPY_DRAFT.cantPlay}</p>
+        <p className="m-0 text-[#f1f4f3]">{VIEWER_COPY.cantPlay}</p>
       )}
       <div
         className={

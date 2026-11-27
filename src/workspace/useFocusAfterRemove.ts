@@ -10,11 +10,14 @@ import { neighborAfterRemove } from "./model";
  * the list re-renders without that item, focus moves to the first button
  * of the neighbor (next, else previous), or to `fallbackRef` (the list's
  * heading) when the list is empty. Rows are found by `attribute` inside
- * `listRef`, e.g. data-frame-id="…". */
+ * `listRef`, e.g. data-frame-id="…". `selector` picks the button in the
+ * row (default: the first); frames aim at their own remove button so
+ * Enter, Enter keeps removing. */
 type Options = {
   listRef: RefObject<HTMLElement>;
   fallbackRef: RefObject<HTMLElement>;
   attribute: `data-${string}`;
+  selector?: string;
 };
 
 type Pending = {
@@ -25,7 +28,7 @@ type Pending = {
 
 export const useFocusAfterRemove = (
   items: readonly { id: string }[],
-  { listRef, fallbackRef, attribute }: Options,
+  { listRef, fallbackRef, attribute, selector = "button" }: Options,
 ): ((removedId: string) => boolean) => {
   const pending = useRef<Pending | null>(null);
 
@@ -58,9 +61,9 @@ export const useFocusAfterRemove = (
           ?? [],
       ).find((element) => element.getAttribute(attribute) === next.targetId);
 
-    const button = row?.querySelector("button");
+    const button = row?.querySelector<HTMLElement>(selector);
     (button ?? fallbackRef.current)?.focus();
-  }, [items, listRef, fallbackRef, attribute]);
+  }, [items, listRef, fallbackRef, attribute, selector]);
 
   return prepare;
 };

@@ -5,12 +5,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AnnounceProvider, REANNOUNCE_DELAY_MS } from "./announce";
 import FrameStrip, { PHOTO_TYPES } from "./FrameStrip";
+import { moveItem } from "./model";
 import { type Frame } from "./types";
 
 const makeFrames = (...ids: string[]): Frame[] =>
-  ids.map((id) => ({ id, src: `data:image/png;base64,${id}` }));
+  ids.map((id) => ({
+    id,
+    blob: new Blob([id]),
+    source: { kind: "photo", fileName: `${id}.png` },
+    src: `blob:test/${id}`,
+  }));
 
-/* Owns the frames like the page will, so removals really re-render. */
+/* Owns the frames like the page will, so moves and removals really
+ * re-render. */
 const Harness = ({
   initial,
   onAddPhotos = () => undefined,
@@ -23,6 +30,7 @@ const Harness = ({
     <AnnounceProvider>
       <FrameStrip
         frames={frames}
+        onMove={(id, to) => setFrames((f) => [...moveItem(f, id, to)])}
         onRemove={(id) => setFrames((f) => f.filter((x) => x.id !== id))}
         onAddPhotos={onAddPhotos}
       />
@@ -145,5 +153,78 @@ describe("FrameStrip", () => {
     fireEvent.click(removeButton("Remove frame 1 of 2"));
     fireEvent.click(removeButton("Remove frame 1 of 1"));
     expect(spoken()).toBe("Frame removed. 0 left.");
+  });
+
+  describe("moving", () => {
+    const order = () =>
+      Array.from(document.querySelectorAll("li"), (li) => li.dataset.frameId);
+    const focusedFrame = () =>
+      (document.activeElement?.closest("li") as HTMLElement | null)?.dataset
+        .frameId;
+
+    it("moves a frame later, keeps focus on its later button, announces",
+      () => {
+        render(<Harness initial={makeFrames("a", "b", "c")} />);
+        const later = removeButton("Move frame 1 of 3 later");
+        later.focus();
+
+        fireEvent.click(later);
+
+        expect(order()).toEqual(["b", "a", "c"]);
+        expect(document.activeElement)
+          .toBe(removeButton("Move frame 2 of 3 later"));
+        expect(focusedFrame()).toBe("a");
+        expect(spoken()).toBe("Moved to position 2 of 3.");
+      });
+
+    it("moves a frame earlier and keeps focus on its earlier button", () => {
+      render(<Harness initial={makeFrames("a", "b", "c")} />);
+      removeButton("Move frame 3 of 3 earlier").focus();
+
+      fireEvent.click(removeButton("Move frame 3 of 3 earlier"));
+
+      expect(order()).toEqual(["a", "c", "b"]);
+      expect(document.activeElement)
+        .toBe(removeButton("Move frame 2 of 3 earlier"));
+      expect(focusedFrame()).toBe("c");
+      expect(spoken()).toBe("Moved to position 2 of 3.");
+    });
+
+    it("keeps focus on the now-blocked button when a frame reaches an end",
+      () => {
+        render(<Harness initial={makeFrames("a", "b")} />);
+        removeButton("Move frame 2 of 2 earlier").focus();
+
+        fireEvent.click(removeButton("Move frame 2 of 2 earlier"));
+
+        const earlier = removeButton("Move frame 1 of 2 earlier");
+        expect(document.activeElement).toBe(earlier);
+        expect(earlier.getAttribute("aria-disabled")).toBe("true");
+        expect(spoken()).toBe("Moved to position 1 of 2.");
+      });
+
+    it("does nothing at the ends: no move, no announcement", () => {
+      render(<Harness initial={makeFrames("a", "b")} />);
+
+      fireEvent.click(removeButton("Move frame 1 of 2 earlier"));
+      fireEvent.click(removeButton("Move frame 2 of 2 later"));
+
+      expect(order()).toEqual(["a", "b"]);
+      expect(spoken()).toBe("");
+    });
+
+    it("takes several moves in a row from the keyboard", () => {
+      render(<Harness initial={makeFrames("a", "b", "c", "d")} />);
+      removeButton("Move frame 1 of 4 later").focus();
+
+      for (let i = 0; i < 3; i += 1) {
+        const focused = document.activeElement as HTMLElement;
+        fireEvent.click(focused);
+      }
+
+      expect(order()).toEqual(["b", "c", "d", "a"]);
+      expect(focusedFrame()).toBe("a");
+      expect(spoken()).toBe("Moved to position 4 of 4.");
+    });
   });
 });

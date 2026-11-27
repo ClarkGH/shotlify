@@ -29,14 +29,14 @@ Breaking one knowingly is Clark's call, never yours. Flag it instead.
 - `pnpm lint` - ESLint 9 flat config ([eslint.config.mjs](eslint.config.mjs)). No errors; keep it that way
 - `pnpm build` / `pnpm start` - production build and server
 - `pnpm smoke` - builds, starts, and loads the page in headless Chromium: CSP header present and enforced, page hydrates, no console errors. `--no-build` reuses the last build
-- `pnpm a11y` - WCAG 2.2 AA audit of the production build: axe in every page state at 1280 and 320px, reflow, a full keyboard walk (focus ring, not covered, 44px targets, label in name), text spacing, structure, live-region announcements, blocked-button descriptions from Chromium's accessibility tree. About a minute; run it for any UI change. `--no-build` too. Not a substitute for a real screen reader pass
+- `pnpm a11y` - WCAG 2.2 AA audit of the production build: axe in every page state at 1280 and 320px (gallery open included), reflow, a full keyboard walk (focus ring, not covered, 44px targets, label in name), text spacing, structure, live-region announcements, blocked-button descriptions from Chromium's accessibility tree, keyboard reorder, pointer drag with the CSP enforced (mouse, touch, one-column phones, cancel, auto-scroll), and the gallery dialog (focus trap and return, inert page, keys). About a minute; run it for any UI change. `--no-build` too. Not a substitute for a real screen reader pass
 - `pnpm dev` - dev server (no CSP in dev)
 
 ## What "done" means
 
 `pnpm test` green, typecheck clean, lint with no errors, and `pnpm smoke` passing when the build or CSP inputs changed. Hooks enforce all four (`.claude/settings.json`). Logic that can break silently (ids, list operations, file reads) goes in a module with no React, with a spec. If a check is red and you can't fix it in-scope, stop and say why. Don't weaken, skip, or delete a check to get green.
 
-Bugs here tend to pass build and lint and still break the live page: a blocked script, a page that never hydrates, a control with no name. Check in a real browser, not just the compiler.
+Bugs here tend to pass build and lint and still break the live page: a blocked script, a page that never hydrates, a control with no name. Check in a real browser, not just the compiler. Browser checks for list moves drop somewhere only the right logic reaches (the middle, not an end).
 
 ## How we work
 
@@ -44,7 +44,7 @@ Bugs here tend to pass build and lint and still break the live page: a blocked s
 2. **Plan**: when the approach isn't clear yet. Propose and wait for approval.
 3. **Agent**: only once the context is all there and Clark has said go.
 
-- Clark writes the seam (interfaces, types, props), Claude fills in the body.
+- Claude writes the seams (interfaces, types, props) and bodies; Clark reviews the seam in chat.
 - One moving part per slice. Checks green before the next slice starts.
 - Small diffs. No drive-by refactors, no speculative abstraction (YAGNI).
 - After a slice, ask Clark questions about the why instead of supplying it. Don't write his reasoning for him.

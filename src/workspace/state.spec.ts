@@ -8,7 +8,12 @@ import {
 import { type Frame, type Video } from "./types";
 
 const video = (id: string): Video => ({ id, src: `data:${id}`, name: id });
-const frame = (id: string): Frame => ({ id, src: `data:${id}` });
+const frame = (id: string): Frame => ({
+  id,
+  blob: new Blob([id]),
+  source: { kind: "photo", fileName: id },
+  src: `blob:${id}`,
+});
 
 const withVideos = (
   ids: string[],
@@ -138,6 +143,31 @@ describe("frames", () => {
       .toBe(state);
   });
 
+  it("moves a frame to a new index", () => {
+    const state = {
+      ...emptyWorkspace,
+      frames: [frame("a"), frame("b"), frame("c")],
+    };
+
+    expect(
+      workspaceReducer(state, { type: "frameMoved", id: "a", toIndex: 2 })
+        .frames.map((f) => f.id),
+    ).toEqual(["b", "c", "a"]);
+  });
+
+  it("returns the same state for a move that changes nothing", () => {
+    const state = { ...emptyWorkspace, frames: [frame("a"), frame("b")] };
+
+    for (const toIndex of [0, -5, Number.NaN]) {
+      expect(
+        workspaceReducer(state, { type: "frameMoved", id: "a", toIndex }),
+      ).toBe(state);
+    }
+    expect(
+      workspaceReducer(state, { type: "frameMoved", id: "zzz", toIndex: 1 }),
+    ).toBe(state);
+  });
+
   it("ignores an empty add", () => {
     expect(
       workspaceReducer(emptyWorkspace, { type: "framesAdded", frames: [] }),
@@ -150,7 +180,11 @@ describe("frames", () => {
 
     workspaceReducer(state, { type: "videoRemoved", id: "a" });
     workspaceReducer(state, { type: "framesAdded", frames: [frame("x")] });
+    const withFrames = { ...state, frames: [frame("p"), frame("q")] };
+    const framesBefore = withFrames.frames.map((f) => f.id);
+    workspaceReducer(withFrames, { type: "frameMoved", id: "p", toIndex: 1 });
 
     expect(JSON.stringify(state)).toBe(snapshot);
+    expect(withFrames.frames.map((f) => f.id)).toEqual(framesBefore);
   });
 });

@@ -1,18 +1,23 @@
-import { useId, useRef } from "react";
+import { useId, useRef, useState } from "react";
 
 import FilePicker from "../common/components/FilePicker";
 import { useAnnounce } from "./announce";
+import FrameGallery from "./FrameGallery";
 import FrameTile from "./FrameTile";
+import { useDragReorder } from "./useDragReorder";
 import { type Frame } from "./types";
 import { useFocusAfterRemove } from "./useFocusAfterRemove";
 
 /* "Slideshow order" / "Frames play left to right." An ordered list of
  * FrameTiles, the empty state ("View your slideshow's frames here") and
- * the "Add photos" FilePicker. Moves focus after a remove
- * (useFocusAfterRemove) and announces "Frame removed. N left." No
- * reordering until slice 4. */
+ * the "Add photos" FilePicker. After a move, focus stays on the pressed
+ * button and "Moved to position N of M." is announced; after a remove,
+ * focus goes to the neighbor's remove button and "Frame removed. N
+ * left." is announced. */
 export type FrameStripProps = {
   frames: readonly Frame[];
+  /* toIndex is 0-based: where the frame ends up */
+  onMove: (id: string, toIndex: number) => void;
   onRemove: (id: string) => void;
   onAddPhotos: (files: File[]) => void;
 };
@@ -23,6 +28,7 @@ export const PHOTO_TYPES = "image/png, image/jpeg, image/webp";
 
 const FrameStrip = ({
   frames,
+  onMove,
   onRemove,
   onAddPhotos,
 }: FrameStripProps): JSX.Element => {
@@ -34,7 +40,54 @@ const FrameStrip = ({
     listRef,
     fallbackRef: headingRef,
     attribute: "data-frame-id",
+    selector: '[data-action="remove"]',
   });
+  /* One path for buttons and drag, so both announce the same way. */
+  const moveTo = (id: string, to: number) => {
+    announce(`Moved to position ${to + 1} of ${frames.length}.`);
+    onMove(id, to);
+  };
+
+  /* Focus needs no help here: the tile is keyed, so React moves the same
+   * button node and puts focus back on it after the reorder (checked in
+   * jsdom and Chromium; the specs and `pnpm a11y` fail if that stops). */
+  const handleMove = (id: string, by: -1 | 1) => {
+    const from = frames.findIndex((frame) => frame.id === id);
+    const to = from + by;
+    if (from === -1 || to < 0 || to >= frames.length) return;
+    moveTo(id, to);
+  };
+
+  /* A pointer drop leaves focus where it was (decided 2026-11-26). */
+  const zoneRef = useRef<HTMLDivElement>(null);
+  const { drag, startDrag } = useDragReorder({
+    frames,
+    listRef,
+    zoneRef,
+    onDrop: moveTo,
+  });
+
+  /* The gallery (4d): which frame it shows, by id. On close, focus goes
+   * back to the View button of the frame on show then, which may not be
+   * the one it opened on. */
+  const [viewingId, setViewingId] = useState<string | null>(null);
+  const handleGalleryClose = (id: string) => {
+    setViewingId(null);
+    listRef.current
+      ?.querySelector<HTMLElement>(
+        `[data-frame-id="${CSS.escape(id)}"] [data-action="view"]`,
+      )
+      ?.focus();
+  };
+
+  const dropMarkFor = (index: number): "before" | "after" | undefined => {
+    if (drag?.drop === null || drag?.drop === undefined) return undefined;
+    if (drag.drop === index) return "before";
+    if (drag.drop === frames.length && index === frames.length - 1) {
+      return "after";
+    }
+    return undefined;
+  };
 
   const handleRemove = (id: string) => {
     if (!prepareFocus(id)) return;
@@ -68,6 +121,7 @@ const FrameStrip = ({
        * right: WCAG 1.4.10 says content mustn't need scrolling in two
        * directions at 320 CSS px. */}
       <div
+        ref={zoneRef}
         className={
           `flex items-start gap-[14px] overflow-x-auto rounded-sm
           bg-[#1c1916] p-[14px] max-sm:flex-wrap`
@@ -92,7 +146,13 @@ const FrameStrip = ({
                 frame={frame}
                 position={index + 1}
                 total={frames.length}
+                onMove={handleMove}
                 onRemove={handleRemove}
+                onDragStart={startDrag}
+                onView={setViewingId}
+                dragging={drag?.id === frame.id}
+                dropMark={dropMarkFor(index)}
+                dropAcross={drag?.across ?? false}
               />
             ))}
           </ol>
@@ -100,7 +160,7 @@ const FrameStrip = ({
 
         <div
           className={
-            `grid h-[94px] w-[168px] flex-none place-items-center
+            `grid h-[94px] w-[176px] flex-none place-items-center
             border-2 border-dashed border-[#9aa39f]`
           }
         >
@@ -114,6 +174,12 @@ const FrameStrip = ({
           />
         </div>
       </div>
+      <FrameGallery
+        frames={frames}
+        viewingId={viewingId}
+        onShow={setViewingId}
+        onClose={handleGalleryClose}
+      />
     </section>
   );
 };

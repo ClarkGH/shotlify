@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { AnnounceProvider, REANNOUNCE_DELAY_MS } from "./announce";
 import { type Video } from "./types";
 import VideoList, { VIDEO_TYPES } from "./VideoList";
 
@@ -28,17 +29,26 @@ const Harness = ({
   const [videos, setVideos] = useState(initial);
   const [selectedId, setSelectedId] = useState(selected);
   return (
-    <VideoList
-      videos={videos}
-      selectedId={selectedId}
-      onSelect={(id) => {
-        setSelectedId(id);
-        onSelect?.(id);
-      }}
-      onAdd={onAdd}
-      onRemove={(id) => setVideos((v) => v.filter((x) => x.id !== id))}
-    />
+    <AnnounceProvider>
+      <VideoList
+        videos={videos}
+        selectedId={selectedId}
+        onSelect={(id) => {
+          setSelectedId(id);
+          onSelect?.(id);
+        }}
+        onAdd={onAdd}
+        onRemove={(id) => setVideos((v) => v.filter((x) => x.id !== id))}
+      />
+    </AnnounceProvider>
   );
+};
+
+const spoken = () => {
+  act(() => {
+    vi.advanceTimersByTime(REANNOUNCE_DELAY_MS);
+  });
+  return screen.getByRole("status").textContent;
 };
 
 const nameButton = (name: string) => screen.getByRole("button", { name });
@@ -140,5 +150,48 @@ describe("VideoList", () => {
     const heading = screen.getByRole("heading", { name: "Your videos" });
     expect(document.activeElement).toBe(heading);
     expect(heading.getAttribute("tabindex")).toBe("-1");
+  });
+
+  /* The case logic has its own specs (model.spec.ts); these check the
+   * list passes it the right list and selection. */
+  describe("announcing a remove", () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it("counts what's left when the video wasn't playing", () => {
+      render(
+        <Harness
+          initial={makeVideos("a.mp4", "b.mp4", "c.mp4")}
+          selected="a.mp4"
+        />,
+      );
+
+      fireEvent.click(removeButton("b.mp4"));
+
+      expect(spoken()).toBe("Video removed. 2 left.");
+    });
+
+    it("names the next video when the playing one goes", () => {
+      render(
+        <Harness initial={makeVideos("a.mp4", "b.mp4")} selected="a.mp4" />,
+      );
+
+      fireEvent.click(removeButton("a.mp4"));
+
+      expect(spoken()).toBe("Video removed. Now showing b.mp4.");
+    });
+
+    it("says none are left when the last video goes", () => {
+      render(<Harness initial={makeVideos("a.mp4")} selected="a.mp4" />);
+
+      fireEvent.click(removeButton("a.mp4"));
+
+      expect(spoken()).toBe("Video removed. No videos left.");
+    });
   });
 });

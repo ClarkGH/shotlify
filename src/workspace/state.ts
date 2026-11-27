@@ -1,4 +1,4 @@
-import { neighborAfterRemove } from "./model";
+import { moveItem, neighborAfterRemove } from "./model";
 import { type Frame, type Video } from "./types";
 
 /* Everything the workspace page holds, and every way it changes. Pure:
@@ -15,7 +15,9 @@ export type WorkspaceAction =
   | { type: "videoSelected"; id: string }
   | { type: "videoRemoved"; id: string }
   | { type: "framesAdded"; frames: Frame[] }
-  | { type: "frameRemoved"; id: string };
+  | { type: "frameRemoved"; id: string }
+  /* toIndex = where it ends up (0-based); clamped, see moveItem */
+  | { type: "frameMoved"; id: string; toIndex: number };
 
 export const emptyWorkspace: WorkspaceState = {
   videos: [],
@@ -71,6 +73,12 @@ export const workspaceReducer = (
         ...state,
         frames: state.frames.filter((frame) => frame.id !== action.id),
       };
+
+    case "frameMoved": {
+      const frames = moveItem(state.frames, action.id, action.toIndex);
+      if (frames === state.frames) return state;
+      return { ...state, frames: [...frames] };
+    }
 
     default: {
       // A new action type that isn't handled fails to compile here.

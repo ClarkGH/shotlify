@@ -1,6 +1,8 @@
 import { useId, useRef } from "react";
 
 import FilePicker from "../common/components/FilePicker";
+import { useAnnounce } from "./announce";
+import { videoRemovedMessage } from "./model";
 import { type Video } from "./types";
 import { useFocusAfterRemove } from "./useFocusAfterRemove";
 
@@ -8,8 +10,8 @@ import { useFocusAfterRemove } from "./useFocusAfterRemove";
  * Owns the "Add video" FilePicker. Each row: the file name as a button
  * (aria-current="true" on the selected one) and a "Remove" text button.
  * After a remove, focus moves to the neighbor's name, or to the heading
- * when the list empties. Choosing the next selection is the page's job.
- * No announcement on remove yet: that copy isn't written. */
+ * when the list empties, and the removal is announced
+ * (videoRemovedMessage). Choosing the next selection is the page's job. */
 export type VideoListProps = {
   videos: readonly Video[];
   selectedId: string | null;
@@ -29,6 +31,7 @@ const VideoList = ({
   onAdd,
   onRemove,
 }: VideoListProps): JSX.Element => {
+  const { announce } = useAnnounce();
   const headingId = useId();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
@@ -42,6 +45,8 @@ const VideoList = ({
 
   const handleRemove = (id: string) => {
     if (!prepareFocus(id)) return;
+    const message = videoRemovedMessage(videos, id, selectedId);
+    if (message) announce(message);
     onRemove(id);
   };
 
